@@ -1,8 +1,8 @@
 package core.loader;
 
-import core.AbstractFactoryInterface;
+import core.FactoryInterface;
 
-public class LoaderFactory implements AbstractFactoryInterface<Loader> {
+public class LoaderFactory implements FactoryInterface<Loader> {
 
     @Override
     public Loader create(String key) {

@@ -35,8 +35,6 @@ public class CsvParser implements Parser {
                 } else {
                     items.add(lineData);
                 }
-
-                // process the line.
             }
         } catch (IOException e) {
             e.printStackTrace();

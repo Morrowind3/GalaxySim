@@ -1,10 +1,10 @@
 package core.parser;
 
-import core.AbstractFactoryInterface;
+import core.FactoryInterface;
 import core.loader.ApiLoader;
 import core.loader.LocalLoader;
 
-public class ParserFactory implements AbstractFactoryInterface<Parser> {
+public class ParserFactory implements FactoryInterface<Parser> {
     @Override
     public Parser create(String key) {
         return switch (key) {

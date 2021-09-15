@@ -1,19 +1,16 @@
 package core.loader;
 
-import core.AbstractFactoryInterface;
+import core.FactoryInterface;
 import core.parser.Parser;
 import core.parser.ParserFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.List;
 import java.util.Map;
 
 public class LocalLoader implements Loader {
 
-    private static final AbstractFactoryInterface<Parser> parserFactory = new ParserFactory();
+    private static final FactoryInterface<Parser> parserFactory = new ParserFactory();
 
 
     @Override
