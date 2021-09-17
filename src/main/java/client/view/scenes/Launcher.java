@@ -1,5 +1,6 @@
 package client.view.scenes;
 
+import client.controller.SimulationMediator;
 import client.view.components.FileSelector;
 import core.SupportedFormat;
 import javafx.scene.Parent;
@@ -16,11 +17,12 @@ import javafx.stage.Stage;
 
 public class Launcher {
 
+    private static final SimulationMediator simulationMediator = new SimulationMediator();
+
     public void Show(Stage stage){
         StringBuilder welcomeStringBuilder = new StringBuilder("Welcome to the Flat Galaxy Simulator! \nPlease provide a valid resource for planets.\n")
                 .append("\nThe following formats are supported:");
-
-        for (SupportedFormat format : SupportedFormat.values()) {
+        for(String format : simulationMediator.getInputTypes()){
             welcomeStringBuilder.append("\n -").append(format);
         }
 
