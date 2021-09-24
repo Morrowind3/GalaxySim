@@ -42,17 +42,9 @@ public class CsvParser implements Parser {
         return items;
     }
 
-    //Dutch decimal syntax is assumed
-    //TODO: Lots of if statements, could probably be done better
     private Object guessFieldType(String field){
-        if(field.matches("-?\\d+")){
-            if(field.contains(",")){
-                if(field.length() < 7){
-                    return Float.parseFloat(field);
-                }
-                return Double.parseDouble(field);
-            }
-            return Integer.parseInt(field);
+        if(field.matches("-?\\d+.?,?\\d?\\d?")){
+            return Float.parseFloat(field);
         }
         if(field.matches("true|false/i")){
             return Boolean.parseBoolean(field);

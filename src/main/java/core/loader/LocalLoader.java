@@ -1,6 +1,7 @@
 package core.loader;
 
 import core.FactoryInterface;
+import core.exceptions.InvalidDataException;
 import core.parser.Parser;
 import core.parser.ParserFactory;
 
@@ -14,19 +15,16 @@ public class LocalLoader implements Loader {
 
 
     @Override
-    public List<Map<String, ?>> loadSimData() {
+    public List<Map<String, ?>> loadSimData(String dataUrl) throws InvalidDataException {
         Parser parser;
 
-        File file = new File("./././res/planetsExtended.csv"); //TODO: Selectable file;
+        File file = new File(dataUrl);
         if (file.isFile()) {
             String extension = file.getName();
             extension = extension.substring(extension.indexOf('.')+1);
             parser = parserFactory.create(extension);
-
             return parser.parseData(file);
         }
-
-
-        return null;
+        throw new InvalidDataException();
     }
 }

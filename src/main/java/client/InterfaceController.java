@@ -13,15 +13,19 @@ public class InterfaceController implements Mediator {
     private FileSelector fileSelector;
     private SimulationView simView;
 
+    public boolean isLocalSelected(){
+        return true;
+    }
+
     public void loadSimulation(String dataUrl){
         SimulationController simController = new SimulationController( dataUrl, this);
-        simView.setMediator(simController);
+        simController.registerComponent(simView);
         launcher.LaunchSimulation(simView);
     }
 
     public void launchApp(Stage primaryStage){
         primaryStage.setTitle("Flat Galaxy Simulator 2021");
-        primaryStage.setWidth(750);
+        primaryStage.setWidth(800);
         primaryStage.setHeight(750);
 
         FileSelectorController controller = new FileSelectorController(primaryStage, this);
