@@ -19,6 +19,7 @@ public class Launcher {
 
     public void LaunchSimulation(SimulationView simulationView){
         borderPane.setCenter(simulationView);
+        simulationView.renderSimulation();
     }
 
     public void Show(Stage stage, FileSelector selector){
