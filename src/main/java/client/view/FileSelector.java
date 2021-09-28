@@ -1,6 +1,5 @@
 package client.view;
 
-import client.InterfaceController;
 import client.Mediator;
 import client.view.components.Component;
 import client.view.components.FileSelectButton;
@@ -9,9 +8,6 @@ import client.view.components.UrlField;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-
-import java.util.List;
 
 public class FileSelector extends HBox implements Component {
     private FileSelectorController mediator;

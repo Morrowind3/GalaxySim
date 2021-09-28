@@ -1,11 +1,13 @@
 package client.view.scenes;
 
+import client.Mediator;
 import client.view.FileSelector;
 import client.view.SimulationController;
 import client.view.SimulationView;
 import client.view.components.Component;
 import core.SupportedFormats;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -14,12 +16,11 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Launcher {
+public class Launcher{
     final BorderPane borderPane = new BorderPane();
 
-    public void LaunchSimulation(SimulationView simulationView){
+    public void setCenterCanvas(Canvas simulationView){
         borderPane.setCenter(simulationView);
-        simulationView.renderSimulation();
     }
 
     public void Show(Stage stage, FileSelector selector){
@@ -40,5 +41,4 @@ public class Launcher {
         stage.setScene(launcherScene);
         stage.show();
     }
-
 }

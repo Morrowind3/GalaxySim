@@ -1,6 +1,6 @@
 package client.view;
 
-import client.InterfaceController;
+import client.SuperController;
 import client.Mediator;
 import client.view.components.CelestialBodyComponent;
 import client.view.components.Component;
@@ -16,12 +16,17 @@ import java.util.Map;
 
 public class SimulationController implements Mediator {
     private final List<CelestialBodyComponent> celestialBodies = new ArrayList<>();
+    private final List<CelestialBody> celestialBodyModels = new ArrayList<>();
     private SimulationView simulationView;
-    private InterfaceController superController;
+    private SuperController superController;
+    private boolean isLoaded = false;
 
-    public SimulationController(String dataUrl, InterfaceController superController){
+
+    public SimulationController(SuperController superController){
         this.superController = superController;
+    }
 
+    public void loadData(String dataUrl){
         LoaderFactory loaderFactory = new LoaderFactory();
         String loaderType;
         if(superController.isLocalSelected()){
@@ -30,7 +35,6 @@ public class SimulationController implements Mediator {
             loaderType = "api";
         }
         Loader loader = loaderFactory.create(loaderType);
-        final List<CelestialBody> celestialBodyModels = new ArrayList<>();
         final CelestialBodyFactory builder = new CelestialBodyFactory();
         try{
             for(Map<String, ?> celestialBody : loader.loadSimData(dataUrl)){
@@ -44,8 +48,27 @@ public class SimulationController implements Mediator {
 
         for(CelestialBody model : celestialBodyModels){
             CelestialBodyComponent component = new CelestialBodyComponent(model);
+            model.addObserver(component);
             celestialBodies.add(component);
         }
+        superController.setMainContentCanvas(simulationView);
+
+        isLoaded = true;
+    }
+
+    public Boolean isLoaded(){
+        return isLoaded;
+    }
+
+    public String getName(){
+        return "SimulationController";
+    }
+
+    public void updateSimulation(){
+        for(CelestialBody model : celestialBodyModels){
+            model.move();
+        }
+        simulationView.renderSimulation();
     }
 
     public List<CelestialBodyComponent> getCelestialBodies(){
@@ -56,7 +79,7 @@ public class SimulationController implements Mediator {
     public void registerComponent(Component component) {
         component.setMediator(this);
         switch (component.getName()) {
-            case "SimView" -> simulationView = (SimulationView) component;
+            case "SimulationView" -> simulationView = (SimulationView) component;
             default -> {
             }
         }

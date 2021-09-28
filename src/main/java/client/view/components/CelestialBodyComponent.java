@@ -9,8 +9,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
+import java.util.Observable;
+import java.util.Observer;
 
-public class CelestialBodyComponent implements Component{
+
+public class CelestialBodyComponent implements Component, Observer {
 
     private SimulationController controller;
     private CelestialBody model;
@@ -33,5 +36,10 @@ public class CelestialBodyComponent implements Component{
     @Override
     public String getName() {
         return "CelestialBody";
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        model = (CelestialBody) o;
     }
 }

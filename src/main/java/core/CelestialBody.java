@@ -2,7 +2,9 @@ package core;
 
 import core.collisionstates.CollisionState;
 
-public abstract class CelestialBody {
+import java.util.Observable;
+
+public abstract class CelestialBody extends Observable {
     private String name;
     private Float positionX, positionY;
     private Float velocityX, velocityY;
@@ -16,9 +18,15 @@ public abstract class CelestialBody {
         this.state = initialState;
     }
 
+    public void move(){
+        setPosition(positionX + velocityX, positionY + velocityY);
+        notifyObservers();
+    }
+
     public void setPosition(Float positionX, Float positionY) {
         this.positionX = positionX;
         this.positionY = positionY;
+        setChanged();
     }
     public void setVelocity(Float velocityX, Float velocityY) {
         this.velocityX = velocityX;

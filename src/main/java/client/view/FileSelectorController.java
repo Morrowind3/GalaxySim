@@ -1,6 +1,6 @@
 package client.view;
 
-import client.InterfaceController;
+import client.SuperController;
 import client.Mediator;
 import client.view.components.Component;
 import client.view.components.FileSelectButton;
@@ -9,14 +9,14 @@ import client.view.components.UrlField;
 import javafx.stage.Stage;
 
 public class FileSelectorController implements Mediator {
-    private final InterfaceController superController;
+    private final SuperController superController;
     private FileSelectButton fileSelectButton;
     private LoadButton loadButton;
     private UrlField urlField;
 
     private final Stage stage;
 
-    public FileSelectorController(Stage stage, InterfaceController superController){
+    public FileSelectorController(Stage stage, SuperController superController){
         this.stage = stage;
         this.superController = superController;
     }
@@ -25,12 +25,16 @@ public class FileSelectorController implements Mediator {
         urlField.setText(url);
     }
 
-    public void loadSimulation(){
+    public void loadButtonPressed(){
         superController.loadSimulation(urlField.getText());
     }
 
     public Stage getStage(){
         return stage;
+    }
+
+    public String getName(){
+        return "FileSelectorController";
     }
 
     @Override
