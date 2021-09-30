@@ -36,6 +36,10 @@ public abstract class CelestialBody extends Observable {
         this.radius = radius;
     }
 
+    public String getName(){
+        return name;
+    }
+
     public String getColour() {
         return colour;
     }

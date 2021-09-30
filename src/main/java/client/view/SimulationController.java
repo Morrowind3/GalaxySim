@@ -4,8 +4,11 @@ import client.SuperController;
 import client.Mediator;
 import client.view.components.CelestialBodyComponent;
 import client.view.components.Component;
+import client.view.components.HyperlaneComponent;
 import core.CelestialBody;
-import core.CelestialBodyFactory;
+import core.CelestialBodyBuilder;
+import core.Hyperlane;
+import core.Planet;
 import core.exceptions.InvalidDataException;
 import core.loader.Loader;
 import core.loader.LoaderFactory;
@@ -15,7 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SimulationController implements Mediator {
-    private final List<CelestialBodyComponent> celestialBodies = new ArrayList<>();
+
+
     private final List<CelestialBody> celestialBodyModels = new ArrayList<>();
     private SimulationView simulationView;
     private SuperController superController;
@@ -27,6 +31,9 @@ public class SimulationController implements Mediator {
     }
 
     public void loadData(String dataUrl){
+        final List<CelestialBodyComponent> celestialBodies = new ArrayList<>();
+        final List<HyperlaneComponent> hyperlanes = new ArrayList<>();
+
         LoaderFactory loaderFactory = new LoaderFactory();
         String loaderType;
         if(superController.isLocalSelected()){
@@ -35,10 +42,13 @@ public class SimulationController implements Mediator {
             loaderType = "api";
         }
         Loader loader = loaderFactory.create(loaderType);
-        final CelestialBodyFactory builder = new CelestialBodyFactory();
+        final CelestialBodyBuilder builder = new CelestialBodyBuilder();
         try{
             for(Map<String, ?> celestialBody : loader.loadSimData(dataUrl)){
-                celestialBodyModels.add(builder.makeCelestialBodyFromMap(celestialBody));
+                builder.makeNewCelestialBodyFromMap(celestialBody);
+                String[] neighbours = ((String) celestialBody.get("neighbours")).split(",");
+                builder.formHyperlanes(neighbours, celestialBodyModels);
+                celestialBodyModels.add(builder.returnCelestialBody());
             }
         } catch (InvalidDataException e){
             //Todo: Notify user
@@ -50,7 +60,16 @@ public class SimulationController implements Mediator {
             CelestialBodyComponent component = new CelestialBodyComponent(model);
             model.addObserver(component);
             celestialBodies.add(component);
+            if(model instanceof Planet){ //todo: Icky typecheck, candidate for refactor
+                List<Hyperlane> lanes = ((Planet) model).getHyperlanes();
+                for(Hyperlane lane: lanes){
+                    hyperlanes.add(new HyperlaneComponent(lane));
+                }
+
+            }
         }
+        simulationView.setCelestialBodyComponents(celestialBodies);
+        simulationView.setHyperlaneComponents(hyperlanes);
         superController.setMainContentCanvas(simulationView);
 
         isLoaded = true;
@@ -69,10 +88,6 @@ public class SimulationController implements Mediator {
             model.move();
         }
         simulationView.renderSimulation();
-    }
-
-    public List<CelestialBodyComponent> getCelestialBodies(){
-        return celestialBodies;
     }
 
     @Override

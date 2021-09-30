@@ -13,7 +13,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 
-public class CelestialBodyComponent implements Component, Observer {
+public class CelestialBodyComponent implements Component, Drawable, Observer {
 
     private SimulationController controller;
     private CelestialBody model;
