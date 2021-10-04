@@ -1,22 +1,13 @@
 package core;
 
-import client.InterfaceController;
-import client.view.FileSelector;
-import client.view.SimulationView;
-import javafx.application.Application;
-import javafx.stage.Stage;
+import client.view.SimulationController;
 
-public class GalaxySimulator extends Application {
+public class GalaxySimulator {
 
-    public static void main(String[] args) {
-        launch(args);
+    private final SimulationController simController;
+
+    public GalaxySimulator(SimulationController viewController){
+        this.simController  =  viewController;
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        InterfaceController interfaceController = new InterfaceController();
-        interfaceController.registerComponent(new FileSelector());
-        interfaceController.registerComponent(new SimulationView());
-        interfaceController.launchApp(primaryStage);
-    }
 }

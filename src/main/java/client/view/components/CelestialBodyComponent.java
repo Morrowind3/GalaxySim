@@ -9,8 +9,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
+import java.util.Observable;
+import java.util.Observer;
 
-public class CelestialBodyComponent implements Component{
+
+public class CelestialBodyComponent implements Component, Drawable, Observer {
 
     private SimulationController controller;
     private CelestialBody model;
@@ -22,7 +25,7 @@ public class CelestialBodyComponent implements Component{
     public void draw(GraphicsContext context){
         context.setFill(Color.web(model.getColour()));
         float diameter = model.getRadius() * 2;
-        context.fillOval(model.getPositionX() - model.getRadius(), model.getPositionY() - model.getRadius(), diameter, diameter);
+        context.fillOval(model.getPositionX(), model.getPositionY(), diameter, diameter);
     }
 
     @Override
@@ -33,5 +36,10 @@ public class CelestialBodyComponent implements Component{
     @Override
     public String getName() {
         return "CelestialBody";
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        model = (CelestialBody) o;
     }
 }

@@ -17,7 +17,7 @@ public class LoadButton extends Button implements Component {
         setPrefSize(100, 20);
         setText("Start");
 
-        EventHandler<ActionEvent> loadSimulation = e -> mediator.loadSimulation();
+        EventHandler<ActionEvent> loadSimulation = e -> mediator.loadButtonPressed();
         setOnAction(loadSimulation);
     }
 
