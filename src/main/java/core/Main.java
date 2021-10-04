@@ -12,10 +12,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         final SuperController viewController  = new SuperController();
-        viewController.registerComponent(new FileSelector());
-        final SimulationController simController = new SimulationController(viewController);
-        simController.registerComponent(new SimulationView());
-        viewController.registerSubcontroller(simController);
         viewController.launchApp(primaryStage);
     }
 

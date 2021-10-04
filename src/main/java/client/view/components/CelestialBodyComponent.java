@@ -25,7 +25,7 @@ public class CelestialBodyComponent implements Component, Drawable, Observer {
     public void draw(GraphicsContext context){
         context.setFill(Color.web(model.getColour()));
         float diameter = model.getRadius() * 2;
-        context.fillOval(model.getPositionX() - model.getRadius(), model.getPositionY() - model.getRadius(), diameter, diameter);
+        context.fillOval(model.getPositionX(), model.getPositionY(), diameter, diameter);
     }
 
     @Override

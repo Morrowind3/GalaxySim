@@ -18,16 +18,16 @@ import java.util.List;
 import java.util.Map;
 
 public class SimulationController implements Mediator {
-
+    private static final int SIMULATION_HEIGHT = 600;
+    private static final int SIMULATION_WIDTH = 800;
 
     private final List<CelestialBody> celestialBodyModels = new ArrayList<>();
     private SimulationView simulationView;
     private SuperController superController;
-    private boolean isLoaded = false;
-
 
     public SimulationController(SuperController superController){
         this.superController = superController;
+        simulationView = new SimulationView(SIMULATION_WIDTH, SIMULATION_HEIGHT);
     }
 
     public void loadData(String dataUrl){
@@ -65,18 +65,11 @@ public class SimulationController implements Mediator {
                 for(Hyperlane lane: lanes){
                     hyperlanes.add(new HyperlaneComponent(lane));
                 }
-
             }
         }
         simulationView.setCelestialBodyComponents(celestialBodies);
         simulationView.setHyperlaneComponents(hyperlanes);
         superController.setMainContentCanvas(simulationView);
-
-        isLoaded = true;
-    }
-
-    public Boolean isLoaded(){
-        return isLoaded;
     }
 
     public String getName(){
@@ -85,6 +78,12 @@ public class SimulationController implements Mediator {
 
     public void updateSimulation(){
         for(CelestialBody model : celestialBodyModels){
+            if(model.getCenterX() + model.getRadius() * 3 > SIMULATION_WIDTH || model.getCenterX() - model.getRadius() < 0){
+                model.invertVelocityX();
+            }
+            if(model.getCenterY() + model.getRadius() > SIMULATION_HEIGHT || model.getCenterY() - model.getRadius() < 0){
+                model.invertVelocityY();
+            }
             model.move();
         }
         simulationView.renderSimulation();
@@ -94,7 +93,6 @@ public class SimulationController implements Mediator {
     public void registerComponent(Component component) {
         component.setMediator(this);
         switch (component.getName()) {
-            case "SimulationView" -> simulationView = (SimulationView) component;
             default -> {
             }
         }

@@ -5,12 +5,12 @@ import core.collisionstates.CollisionState;
 import java.util.Observable;
 
 public abstract class CelestialBody extends Observable {
-    private String name;
-    private Float positionX, positionY;
-    private Float velocityX, velocityY;
-    private Float radius;
-    private String colour;
-    private CollisionState state;
+    protected String name;
+    protected Float positionX, positionY;
+    protected Float velocityX, velocityY;
+    protected Float radius;
+    protected String colour;
+    protected CollisionState state;
 
     public CelestialBody(String name, String colour, CollisionState initialState) {
         this.name = name;
@@ -18,6 +18,13 @@ public abstract class CelestialBody extends Observable {
         this.state = initialState;
     }
 
+    public void invertVelocityY(){
+        velocityY *= -1;
+    }
+
+    public void invertVelocityX(){
+        velocityX *= -1;
+    }
     public void move(){
         setPosition(positionX + velocityX, positionY + velocityY);
         notifyObservers();
@@ -54,5 +61,13 @@ public abstract class CelestialBody extends Observable {
 
     public Float getPositionY() {
         return positionY;
+    }
+
+    public Float getCenterX() {
+        return positionX + getRadius();
+    }
+
+    public Float getCenterY() {
+        return positionY + getRadius();
     }
 }

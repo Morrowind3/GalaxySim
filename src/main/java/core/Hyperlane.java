@@ -22,14 +22,14 @@ public class Hyperlane {
 
     public float[] getHyperlaneEndA(){
         float[] coords = new float[2];
-        coords[0] = planetA.getPositionX();
-        coords[1] = planetA.getPositionY();
+        coords[0] = planetA.getCenterX();
+        coords[1] = planetA.getCenterY();
         return coords;
     }
     public float[] getHyperlaneEndB(){
         float[] coords = new float[2];
-        coords[0] = planetB.getPositionX();
-        coords[1] = planetB.getPositionY();
+        coords[0] = planetB.getCenterX();
+        coords[1] = planetB.getCenterY();
         return coords;
     }
 
