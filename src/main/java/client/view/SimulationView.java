@@ -22,9 +22,9 @@ public class SimulationView extends Canvas implements Component {
         controller = (SimulationController) mediator;
     }
 
-    public SimulationView(int height, int width){
-        setWidth(height);
-        setHeight(width);
+    public SimulationView(int width, int height){
+        setWidth(width);
+        setHeight(height);
     }
 
     public void renderSimulation(){

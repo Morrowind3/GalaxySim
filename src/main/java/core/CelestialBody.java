@@ -1,21 +1,43 @@
 package core;
 
 import core.collisionstates.CollisionState;
+import core.collisionstates.NullCollisionState;
 
 import java.util.Observable;
 
-public abstract class CelestialBody extends Observable {
-    protected String name;
+public abstract class CelestialBody extends Observable implements Destructable {
+    private final String name;
     protected Float positionX, positionY;
     protected Float velocityX, velocityY;
     protected Float radius;
     protected String colour;
     protected CollisionState state;
+    protected boolean shouldDestroy;
 
-    public CelestialBody(String name, String colour, CollisionState initialState) {
+    public CelestialBody(String name, String colour) {
         this.name = name;
         this.colour = colour;
-        this.state = initialState;
+    }
+
+    public void setCollisionState(CollisionState state){
+        this.state = state;
+    }
+
+    public void setColour(String colourName){
+        this.colour = colourName;
+    }
+
+    public void onCollision(CelestialBody with){
+        state.collide(with);
+    }
+
+    @Override
+    public void prepareForDestruction(){
+        shouldDestroy = true;
+    }
+
+    public boolean shouldDestroy(){
+        return shouldDestroy;
     }
 
     public void invertVelocityY(){

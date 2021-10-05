@@ -1,9 +1,10 @@
 package core;
 
 
-public class Hyperlane {
+public class Hyperlane implements Destructable {
     private Planet planetA;
     private Planet planetB;
+    private boolean shouldDestroy = false;
 
     public Hyperlane(Planet planetA, Planet planetB){
         formNewLane(planetA, planetB);
@@ -33,4 +34,15 @@ public class Hyperlane {
         return coords;
     }
 
+    @Override
+    public void prepareForDestruction() {
+        planetA.getHyperlanes().remove(this);
+        planetB.getHyperlanes().remove(this);
+        shouldDestroy = true;
+    }
+
+    @Override
+    public boolean shouldDestroy() {
+        return shouldDestroy;
+    }
 }
