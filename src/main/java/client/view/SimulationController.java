@@ -5,35 +5,30 @@ import client.Mediator;
 import client.view.components.CelestialBodyComponent;
 import client.view.components.Component;
 import client.view.components.HyperlaneComponent;
-import core.CelestialBody;
-import core.CelestialBodyBuilder;
-import core.Hyperlane;
-import core.Planet;
+import core.*;
 import core.exceptions.InvalidDataException;
 import core.loader.Loader;
 import core.loader.LoaderFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SimulationController implements Mediator {
     private static final int SIMULATION_HEIGHT = 600;
     private static final int SIMULATION_WIDTH = 800;
 
+    private CollisionStrategy collisionStrategy;
     private final List<CelestialBody> celestialBodyModels = new ArrayList<>();
-    private SimulationView simulationView;
-    private SuperController superController;
+    private final CelestialBodyBuilder builder = new CelestialBodyBuilder();
+    private final SimulationView simulationView;
+    private final SuperController superController;
 
     public SimulationController(SuperController superController){
         this.superController = superController;
+        collisionStrategy = new SimpleCollisionStrategy(SIMULATION_WIDTH, SIMULATION_HEIGHT);
         simulationView = new SimulationView(SIMULATION_WIDTH, SIMULATION_HEIGHT);
     }
 
     public void loadData(String dataUrl){
-        final List<CelestialBodyComponent> celestialBodies = new ArrayList<>();
-        final List<HyperlaneComponent> hyperlanes = new ArrayList<>();
-
         LoaderFactory loaderFactory = new LoaderFactory();
         String loaderType;
         if(superController.isLocalSelected()){
@@ -42,7 +37,6 @@ public class SimulationController implements Mediator {
             loaderType = "api";
         }
         Loader loader = loaderFactory.create(loaderType);
-        final CelestialBodyBuilder builder = new CelestialBodyBuilder();
         try{
             for(Map<String, ?> celestialBody : loader.loadSimData(dataUrl)){
                 builder.makeNewCelestialBodyFromMap(celestialBody);
@@ -55,6 +49,14 @@ public class SimulationController implements Mediator {
             System.out.println(e.getMessage());
             return;
         }
+        rebuildComponentLists();
+
+        superController.setMainContentCanvas(simulationView);
+    }
+
+    public void rebuildComponentLists(){
+        final List<CelestialBodyComponent> celestialBodies = new ArrayList<>();
+        final List<HyperlaneComponent> hyperlanes = new ArrayList<>();
 
         for(CelestialBody model : celestialBodyModels){
             CelestialBodyComponent component = new CelestialBodyComponent(model);
@@ -69,7 +71,6 @@ public class SimulationController implements Mediator {
         }
         simulationView.setCelestialBodyComponents(celestialBodies);
         simulationView.setHyperlaneComponents(hyperlanes);
-        superController.setMainContentCanvas(simulationView);
     }
 
     public String getName(){
@@ -77,15 +78,42 @@ public class SimulationController implements Mediator {
     }
 
     public void updateSimulation(){
+        List<CelestialBody> markedForDestruction = new ArrayList<>();
         for(CelestialBody model : celestialBodyModels){
-            if(model.getCenterX() + model.getRadius() * 3 > SIMULATION_WIDTH || model.getCenterX() - model.getRadius() < 0){
-                model.invertVelocityX();
-            }
-            if(model.getCenterY() + model.getRadius() > SIMULATION_HEIGHT || model.getCenterY() - model.getRadius() < 0){
-                model.invertVelocityY();
+            if(model.shouldDestroy()){
+                markedForDestruction.add(model);
+                continue;
             }
             model.move();
         }
+        collisionStrategy.checkCollisions(celestialBodyModels);
+
+        //TODO: States should do this themselves somehow
+        if(!markedForDestruction.isEmpty()){
+            for(CelestialBody marked : markedForDestruction){
+                if(marked.shouldExplode()){
+                    Random random = new Random();
+
+                    for(int i = 0; i < 5; ++i){
+                        builder.makeNewGenericAsteroid();
+                        Asteroid asteroid = (Asteroid) builder.returnCelestialBody();
+                        asteroid.setPosition(marked.getPositionX(), marked.getPositionY());
+                        asteroid.setVelocity(1f + random.nextFloat(), 1f + random.nextFloat());
+                        if(random.nextFloat() < 0.5f){
+                            asteroid.invertVelocityX();
+                        }
+                        if(random.nextFloat() < 0.5f){
+                            asteroid.invertVelocityY();
+                        }
+                        asteroid.setRadius(marked.getRadius() / (1f + random.nextFloat()));
+                        celestialBodyModels.add(asteroid);
+                    }
+                }
+                celestialBodyModels.remove(marked);
+            }
+            rebuildComponentLists();
+        }
+
         simulationView.renderSimulation();
     }
 

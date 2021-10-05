@@ -1,7 +1,5 @@
 package core;
 
-import core.collisionstates.CollisionState;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +7,16 @@ public class Planet extends CelestialBody {
 
     private final List<Hyperlane> hyperlanes;
 
-    public Planet(String name, String colour, CollisionState initialState) {
-        super(name, colour, initialState);
+    public Planet(String name, String colour) {
+        super(name, colour);
         hyperlanes = new ArrayList<>();
+    }
+
+    public void prepareForDestruction(boolean explosive){
+        for(Hyperlane lane: hyperlanes){
+            lane.prepareForDestruction(explosive);;
+        }
+        super.prepareForDestruction(explosive);
     }
 
     public void addHyperlane(Hyperlane hyperlane) {
@@ -22,3 +27,4 @@ public class Planet extends CelestialBody {
         return hyperlanes;
     }
 }
+
