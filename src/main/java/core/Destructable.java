@@ -1,6 +1,6 @@
 package core;
 
 public interface Destructable {
-    void prepareForDestruction();
+    void prepareForDestruction(boolean destructive);
     boolean shouldDestroy();
 }

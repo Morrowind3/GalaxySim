@@ -9,6 +9,6 @@ public class ExplodeState implements  CollisionState {
     }
     @Override
     public void collide(CelestialBody with) {
-
+        stateContext.prepareForDestruction(true);
     }
 }

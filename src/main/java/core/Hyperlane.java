@@ -35,7 +35,7 @@ public class Hyperlane implements Destructable {
     }
 
     @Override
-    public void prepareForDestruction() {
+    public void prepareForDestruction(boolean explosive) {
         planetA.getHyperlanes().remove(this);
         planetB.getHyperlanes().remove(this);
         shouldDestroy = true;

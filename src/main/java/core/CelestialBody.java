@@ -13,6 +13,7 @@ public abstract class CelestialBody extends Observable implements Destructable {
     protected String colour;
     protected CollisionState state;
     protected boolean shouldDestroy;
+    protected boolean shouldExplode;
 
     public CelestialBody(String name, String colour) {
         this.name = name;
@@ -32,12 +33,19 @@ public abstract class CelestialBody extends Observable implements Destructable {
     }
 
     @Override
-    public void prepareForDestruction(){
+    public void prepareForDestruction(boolean explosive){
+        if(explosive){
+            shouldExplode = true;
+        }
         shouldDestroy = true;
     }
 
     public boolean shouldDestroy(){
         return shouldDestroy;
+    }
+
+    public boolean shouldExplode(){
+        return shouldExplode;
     }
 
     public void invertVelocityY(){

@@ -47,6 +47,7 @@ public class CelestialBodyBuilder {
         String name = "Asteroid-" + generateRandomId();
         celestialBody = new Asteroid(name, "Black");
         celestialBody.setRadius(5);
+        celestialBody.setCollisionState(new BounceState(celestialBody));
     }
 
     public void formHyperlanes(String[] neighbourNames, List<CelestialBody> existing){

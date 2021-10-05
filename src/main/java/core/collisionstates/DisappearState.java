@@ -9,6 +9,6 @@ public class DisappearState implements  CollisionState {
     }
     @Override
     public void collide(CelestialBody with) {
-        stateContext.prepareForDestruction();
+        stateContext.prepareForDestruction(false);
     }
 }

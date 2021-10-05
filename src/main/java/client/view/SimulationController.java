@@ -18,8 +18,9 @@ public class SimulationController implements Mediator {
 
     private CollisionStrategy collisionStrategy;
     private final List<CelestialBody> celestialBodyModels = new ArrayList<>();
-    private SimulationView simulationView;
-    private SuperController superController;
+    private final CelestialBodyBuilder builder = new CelestialBodyBuilder();
+    private final SimulationView simulationView;
+    private final SuperController superController;
 
     public SimulationController(SuperController superController){
         this.superController = superController;
@@ -36,7 +37,6 @@ public class SimulationController implements Mediator {
             loaderType = "api";
         }
         Loader loader = loaderFactory.create(loaderType);
-        final CelestialBodyBuilder builder = new CelestialBodyBuilder();
         try{
             for(Map<String, ?> celestialBody : loader.loadSimData(dataUrl)){
                 builder.makeNewCelestialBodyFromMap(celestialBody);
@@ -88,8 +88,29 @@ public class SimulationController implements Mediator {
         }
         collisionStrategy.checkCollisions(celestialBodyModels);
 
+        //TODO: States should do this themselves somehow
         if(!markedForDestruction.isEmpty()){
-            celestialBodyModels.removeAll(markedForDestruction);
+            for(CelestialBody marked : markedForDestruction){
+                if(marked.shouldExplode()){
+                    Random random = new Random();
+
+                    for(int i = 0; i < 5; ++i){
+                        builder.makeNewGenericAsteroid();
+                        Asteroid asteroid = (Asteroid) builder.returnCelestialBody();
+                        asteroid.setPosition(marked.getPositionX(), marked.getPositionY());
+                        asteroid.setVelocity(1f + random.nextFloat(), 1f + random.nextFloat());
+                        if(random.nextFloat() < 0.5f){
+                            asteroid.invertVelocityX();
+                        }
+                        if(random.nextFloat() < 0.5f){
+                            asteroid.invertVelocityY();
+                        }
+                        asteroid.setRadius(marked.getRadius() / (1f + random.nextFloat()));
+                        celestialBodyModels.add(asteroid);
+                    }
+                }
+                celestialBodyModels.remove(marked);
+            }
             rebuildComponentLists();
         }
 
