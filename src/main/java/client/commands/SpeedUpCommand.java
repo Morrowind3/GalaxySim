@@ -1,9 +1,6 @@
 package client.commands;
 
 import client.AnimationTimerPlus;
-import client.SuperController;
-import javafx.animation.AnimationTimer;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 

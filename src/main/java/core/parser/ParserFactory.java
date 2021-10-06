@@ -1,11 +1,8 @@
 package core.parser;
 
-import core.FactoryInterface;
-import core.SupportedFormats;
-import core.loader.ApiLoader;
-import core.loader.LocalLoader;
+import core.Factory;
 
-public class ParserFactory implements FactoryInterface<Parser> {
+public class ParserFactory implements Factory<Parser> {
     @Override
     public Parser create(String key) {
         return switch (key) {

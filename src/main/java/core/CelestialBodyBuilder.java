@@ -1,12 +1,8 @@
 package core;
 
-import core.collisionstates.*;
 import core.exceptions.InvalidDataException;
-import javafx.geometry.Point2D;
-import javafx.scene.paint.Paint;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -34,12 +30,11 @@ public class CelestialBodyBuilder {
 
         String collideEffectName = (String) celestialBodyData.get("oncollision");
         switch(collideEffectName.toLowerCase()){
-            case "blink" -> celestialBody.setCollisionState(new BlinkState(celestialBody));
-            case "bounce" -> celestialBody.setCollisionState(new BounceState(celestialBody));
-            case "disappear" -> celestialBody.setCollisionState(new DisappearState(celestialBody));
-            case "explode" -> celestialBody.setCollisionState(new ExplodeState(celestialBody));
-            case "grow" -> celestialBody.setCollisionState(new GrowState(celestialBody));
-            default -> celestialBody.setCollisionState(new NullCollisionState());
+            case "blink" -> celestialBody.addCollisionType(CollisionTypes.BLINK);
+            case "bounce" -> celestialBody.addCollisionType(CollisionTypes.BOUNCE);
+            case "disappear" -> celestialBody.addCollisionType(CollisionTypes.DISAPPEAR);
+            case "explode" -> celestialBody.addCollisionType(CollisionTypes.EXPLODE);
+            case "grow" -> celestialBody.addCollisionType(CollisionTypes.GROW);
         }
     }
 
@@ -47,7 +42,7 @@ public class CelestialBodyBuilder {
         String name = "Asteroid-" + generateRandomId();
         celestialBody = new Asteroid(name, "Black");
         celestialBody.setRadius(5);
-        celestialBody.setCollisionState(new BounceState(celestialBody));
+        celestialBody.addCollisionType(CollisionTypes.BOUNCE);
     }
 
     public void formHyperlanes(String[] neighbourNames, List<CelestialBody> existing){

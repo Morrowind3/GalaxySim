@@ -1,51 +1,48 @@
 package core;
 
-import core.collisionstates.CollisionState;
-import core.collisionstates.NullCollisionState;
+import core.collisionvisitors.Visited;
+import core.collisionvisitors.CollisionVisitor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
-public abstract class CelestialBody extends Observable implements Destructable {
+public abstract class CelestialBody extends Observable implements Destructable, Visited {
     private final String name;
     protected Float positionX, positionY;
     protected Float velocityX, velocityY;
     protected Float radius;
     protected String colour;
-    protected CollisionState state;
-    protected boolean shouldDestroy;
-    protected boolean shouldExplode;
+    protected final List<CollisionTypes> collisionTypes;
 
     public CelestialBody(String name, String colour) {
         this.name = name;
         this.colour = colour;
+        collisionTypes = new ArrayList<>();
     }
 
-    public void setCollisionState(CollisionState state){
-        this.state = state;
+    @Override
+    public void accept(CollisionVisitor visitor){
+        for(CollisionTypes type: collisionTypes){
+            if(visitor.getType() == type){
+                visitor.visitCelestialBody(this);
+            }
+        }
+    }
+
+    public void addCollisionType(CollisionTypes collisionType){
+        collisionTypes.add(collisionType);
+    }
+    public void removeCollisionType(CollisionTypes collisionType){
+        collisionTypes.remove(collisionType);
     }
 
     public void setColour(String colourName){
         this.colour = colourName;
     }
 
-    public void onCollision(CelestialBody with){
-        state.collide(with);
-    }
-
     @Override
-    public void prepareForDestruction(boolean explosive){
-        if(explosive){
-            shouldExplode = true;
-        }
-        shouldDestroy = true;
-    }
-
-    public boolean shouldDestroy(){
-        return shouldDestroy;
-    }
-
-    public boolean shouldExplode(){
-        return shouldExplode;
+    public void prepareForDestruction(){
     }
 
     public void invertVelocityY(){

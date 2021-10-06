@@ -1,6 +1,6 @@
 package core.loader;
 
-import core.FactoryInterface;
+import core.Factory;
 import core.exceptions.InvalidDataException;
 import core.parser.Parser;
 import core.parser.ParserFactory;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class LocalLoader implements Loader {
 
-    private static final FactoryInterface<Parser> parserFactory = new ParserFactory();
+    private static final Factory<Parser> parserFactory = new ParserFactory();
 
 
     @Override

@@ -12,11 +12,12 @@ public class Planet extends CelestialBody {
         hyperlanes = new ArrayList<>();
     }
 
-    public void prepareForDestruction(boolean explosive){
+    @Override
+    public void prepareForDestruction(){
         for(Hyperlane lane: hyperlanes){
-            lane.prepareForDestruction(explosive);;
+            lane.prepareForDestruction();;
         }
-        super.prepareForDestruction(explosive);
+        super.prepareForDestruction();
     }
 
     public void addHyperlane(Hyperlane hyperlane) {

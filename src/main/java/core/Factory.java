@@ -1,5 +1,5 @@
 package core;
 
-public interface FactoryInterface<T> {
+public interface Factory<T> {
     T create(String key);
 }

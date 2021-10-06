@@ -4,7 +4,7 @@ import javafx.animation.AnimationTimer;
 
 public class AnimationTimerPlus extends AnimationTimer {
     private long lastUpdate = 0 ;
-    private volatile long simulationSpeed = 30_000_00L;
+    private volatile long simulationSpeed = 80_000_00L;
 
     private volatile boolean isRunning;
     private volatile boolean taskReady = true;
@@ -36,6 +36,7 @@ public class AnimationTimerPlus extends AnimationTimer {
     public void ready(){
         this.taskReady = true;
     }
+    public boolean isReady(){ return taskReady; }
 
     @Override
     public void start(){
