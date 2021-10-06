@@ -1,18 +1,16 @@
 package client.view;
 
+import client.FileSelectorController;
 import client.Mediator;
-import client.view.components.Component;
-import client.view.components.FileSelectButton;
-import client.view.components.LoadButton;
-import client.view.components.UrlField;
+import client.view.components.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class FileSelector extends HBox implements Component {
     private FileSelectorController mediator;
-    private final FileSelectButton fileSelectButton = new FileSelectButton();
-    private final LoadButton loadButton = new LoadButton();
+    private final LauncherButton fileSelectButton = new LauncherButton("FileSelectButton", "Select File");
+    private final LauncherButton loadButton = new LauncherButton("LoadButton", "Start");
     private final UrlField urlField = new UrlField();
 
 

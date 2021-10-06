@@ -1,6 +1,6 @@
 package core;
 
-import client.view.SimulationController;
+import client.SimulationController;
 
 public class GalaxySimulator {
 

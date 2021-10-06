@@ -1,25 +1,29 @@
 package client;
 
-import client.view.FileSelectorController;
-import client.view.SimulationController;
+import client.commands.*;
 import client.view.components.Component;
 import client.view.FileSelector;
 import client.view.scenes.Launcher;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 
 public class SuperController implements Mediator {
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 680;
-    private static final int GALAXY_WIDTH = 800;
-    private static final int GALAXY_HEIGHT = 600;
+
+
     private static final String WINDOW_TITLE = "Flat Galaxy Simulator 2021";
     private long simulationSpeed = 30_000_000; //roughly 30FPS by default;
 
-
+    private InputHandler inputHandler;
     private Launcher launcher;
     private FileSelector fileSelector;
     private SimulationController simulationController;
@@ -64,7 +68,15 @@ public class SuperController implements Mediator {
         fileSelector.setMediator(fileSelectorController);
 
         launcher = new Launcher();
+
+
         launcher.Show(primaryStage, fileSelector);
+        inputHandler = new InputHandler(launcher.getScene(), this);
+        inputHandler.registerKeyCommand(KeyCode.BACK_SPACE, new RewindCommand());
+        inputHandler.registerKeyCommand(KeyCode.RIGHT, new SpeedDownCommand());
+        inputHandler.registerKeyCommand(KeyCode.LEFT, new SpeedUpCommand());
+        inputHandler.registerKeyCommand(KeyCode.SPACE, new StartPauseCommand(this));
+        inputHandler.registerKeyCommand(KeyCode.C, new SwitchCollisionAlgorithmCommand());
     }
 
     public String getName(){

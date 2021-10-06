@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 public class UrlField extends TextField implements Component{
 
     public UrlField(){
+        setFocusTraversable(false);
         setPrefSize(400, 20);
     }
 

@@ -1,17 +1,16 @@
-package client.view;
+package client;
 
 import client.SuperController;
 import client.Mediator;
-import client.view.components.Component;
-import client.view.components.FileSelectButton;
-import client.view.components.LoadButton;
-import client.view.components.UrlField;
+import client.commands.LoadSimulationCommand;
+import client.commands.SelectFileCommand;
+import client.view.components.*;
 import javafx.stage.Stage;
 
 public class FileSelectorController implements Mediator {
     private final SuperController superController;
-    private FileSelectButton fileSelectButton;
-    private LoadButton loadButton;
+    private LauncherButton fileSelectButton;
+    private LauncherButton loadButton;
     private UrlField urlField;
 
     private final Stage stage;
@@ -42,13 +41,15 @@ public class FileSelectorController implements Mediator {
         component.setMediator(this);
         switch (component.getName()) {
             case "FileSelectButton":
-                fileSelectButton = (FileSelectButton)component;
+                fileSelectButton = (LauncherButton) component;
+                fileSelectButton.setCommand(new SelectFileCommand(this));
                 break;
             case "LoadButton":
-                loadButton = (LoadButton)component;
+                loadButton = (LauncherButton) component;
+                loadButton.setCommand(new LoadSimulationCommand(this));
                 break;
             case "UrlField":
-                urlField = (UrlField)component;
+                urlField = (UrlField) component;
             default:
                 break;
         }

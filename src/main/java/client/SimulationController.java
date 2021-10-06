@@ -1,7 +1,8 @@
-package client.view;
+package client;
 
 import client.SuperController;
 import client.Mediator;
+import client.view.SimulationView;
 import client.view.components.CelestialBodyComponent;
 import client.view.components.Component;
 import client.view.components.HyperlaneComponent;
@@ -88,7 +89,7 @@ public class SimulationController implements Mediator {
         }
         collisionStrategy.checkCollisions(celestialBodyModels);
 
-        //TODO: States should do this themselves somehow
+        //TODO: States should do this themselves somehow. Visitor?
         if(!markedForDestruction.isEmpty()){
             for(CelestialBody marked : markedForDestruction){
                 if(marked.shouldExplode()){
@@ -113,7 +114,6 @@ public class SimulationController implements Mediator {
             }
             rebuildComponentLists();
         }
-
         simulationView.renderSimulation();
     }
 

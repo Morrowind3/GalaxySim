@@ -1,7 +1,7 @@
 package client.view.components;
 
 import client.Mediator;
-import client.view.SimulationController;
+import client.SimulationController;
 import core.Hyperlane;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;

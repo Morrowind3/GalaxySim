@@ -1,13 +1,10 @@
 package client.view.components;
 
 import client.Mediator;
-import client.view.SimulationController;
+import client.SimulationController;
 import core.CelestialBody;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 
 import java.util.Observable;
 import java.util.Observer;

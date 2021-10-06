@@ -1,6 +1,7 @@
 package client.view;
 
 import client.Mediator;
+import client.SimulationController;
 import client.view.components.CelestialBodyComponent;
 import client.view.components.Component;
 import client.view.components.Drawable;
