@@ -1,18 +1,21 @@
 package client.commands;
 
+import client.AnimationTimerPlus;
 import client.SuperController;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
 public class StartPauseCommand implements EventHandler<Event>  {
-    private final SuperController controller;
+    private final AnimationTimerPlus timer;
 
-    public StartPauseCommand(SuperController controller){
-        this.controller = controller;
+    public StartPauseCommand(AnimationTimerPlus timer){
+        this.timer = timer;
     }
     @Override
     public void handle(Event event) {
-        System.out.println("Start pause command");
+        if(timer.isRunning()){
+            timer.stop();
+        } else timer.start();
     }
 }

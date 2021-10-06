@@ -19,18 +19,24 @@ import javafx.stage.Stage;
 public class SuperController implements Mediator {
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 760;
-
     private static final String WINDOW_TITLE = "Flat Galaxy Simulator 2021";
-    private long simulationSpeed = 30_000_000; //roughly 30FPS by default;
 
     private InputHandler inputHandler;
     private Launcher launcher;
     private FileSelector fileSelector;
     private SimulationController simulationController;
     private FileSelectorController fileSelectorController;
+    private final AnimationTimerPlus applicationLoop;
 
     public SuperController(){
         simulationController = new SimulationController(this);
+        applicationLoop = new AnimationTimerPlus(true) {
+            @Override
+            public void handle(long now) {
+                if(!super.shouldContinue(now)) return;
+                Platform.runLater(() -> simulationController.updateSimulation());
+            }
+        };
     }
 
     public boolean isLocalSelected(){
@@ -39,19 +45,12 @@ public class SuperController implements Mediator {
 
     public void loadSimulation(String dataUrl){
         simulationController.loadData(dataUrl);
+        simulationController.updateSimulation();
+        applicationLoop.ready();
+    }
 
-        AnimationTimer task = new AnimationTimer() {
-            private long lastUpdate = 0 ;
-            @Override
-            public void handle(long now) {
-                if (now - lastUpdate <= simulationSpeed) {
-                    return;
-                }
-                lastUpdate = now;
-                Platform.runLater(() -> simulationController.updateSimulation());
-            }
-        };
-        task.start();
+    public AnimationTimerPlus getApplicationLoop(){
+        return applicationLoop;
     }
 
     public void setMainContentCanvas(Canvas mainContent){

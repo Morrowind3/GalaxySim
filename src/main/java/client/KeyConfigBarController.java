@@ -20,10 +20,11 @@ public class KeyConfigBarController implements Mediator {
         inputHandler = handler;
         this.superController = superController;
 
+        //defaults
         inputHandler.registerKeyCommand(KeyCode.BACK_SPACE, new RewindCommand());
-        inputHandler.registerKeyCommand(KeyCode.RIGHT, new SpeedDownCommand());
-        inputHandler.registerKeyCommand(KeyCode.LEFT, new SpeedUpCommand());
-        inputHandler.registerKeyCommand(KeyCode.SPACE, new StartPauseCommand(superController));
+        inputHandler.registerKeyCommand(KeyCode.LEFT, new SpeedDownCommand(superController.getApplicationLoop()));
+        inputHandler.registerKeyCommand(KeyCode.RIGHT, new SpeedUpCommand(superController.getApplicationLoop()));
+        inputHandler.registerKeyCommand(KeyCode.SPACE, new StartPauseCommand(superController.getApplicationLoop()));
         inputHandler.registerKeyCommand(KeyCode.C, new SwitchCollisionAlgorithmCommand());
     }
 
@@ -46,9 +47,9 @@ public class KeyConfigBarController implements Mediator {
             switch(commandName){
                 case COLLISION_MODE -> inputHandler.registerKeyCommand(key[0], new SwitchCollisionAlgorithmCommand());
                 case REWIND -> inputHandler.registerKeyCommand(key[0], new RewindCommand());
-                case SPEED_DOWN -> inputHandler.registerKeyCommand(key[0], new SpeedDownCommand());
-                case SPEED_UP -> inputHandler.registerKeyCommand(key[0], new SpeedUpCommand());
-                case START_PAUSE -> inputHandler.registerKeyCommand(key[0], new StartPauseCommand(superController));
+                case SPEED_DOWN -> inputHandler.registerKeyCommand(key[0], new SpeedDownCommand(superController.getApplicationLoop()));
+                case SPEED_UP -> inputHandler.registerKeyCommand(key[0], new SpeedUpCommand(superController.getApplicationLoop()));
+                case START_PAUSE -> inputHandler.registerKeyCommand(key[0], new StartPauseCommand(superController.getApplicationLoop()));
             }
         });
     }

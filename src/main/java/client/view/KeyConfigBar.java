@@ -28,8 +28,8 @@ public class KeyConfigBar extends HBox implements Component {
 
         Label label = new Label("Configure \n Keys:");
         makeCommandButton(0, CommandNames.REWIND, KeyCode.BACK_SPACE);
-        makeCommandButton(1, CommandNames.SPEED_UP, KeyCode.LEFT);
-        makeCommandButton(2, CommandNames.SPEED_DOWN, KeyCode.RIGHT);
+        makeCommandButton(1, CommandNames.SPEED_UP, KeyCode.RIGHT);
+        makeCommandButton(2, CommandNames.SPEED_DOWN, KeyCode.LEFT);
         makeCommandButton(3, CommandNames.START_PAUSE, KeyCode.SPACE);
         makeCommandButton(4, CommandNames.COLLISION_MODE, KeyCode.C);
 
