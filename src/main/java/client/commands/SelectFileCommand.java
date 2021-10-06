@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.Locale;
 
 public class SelectFileCommand implements EventHandler<Event> {
     private final FileSelectorController controller;
@@ -30,8 +31,13 @@ public class SelectFileCommand implements EventHandler<Event> {
 
     private void addAcceptedFormats(FileChooser chooser){
         for (SupportedFormats format : SupportedFormats.values()) {
-            String extension = "*." + format.toString();
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Data files", extension));
+            String extensionNoCap = "*." + format.toString().toLowerCase();
+            String extensionAllCap = "*." + format.toString();
+            String extensionInitialCap = "*." + format.toString().charAt(0) + format.toString().toLowerCase().substring(1);
+
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Data files", extensionNoCap));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Data files", extensionAllCap));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Data files", extensionInitialCap.toUpperCase()));
         }
     }
 

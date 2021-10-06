@@ -1,6 +1,7 @@
 package core.parser;
 
 import core.FactoryInterface;
+import core.SupportedFormats;
 import core.loader.ApiLoader;
 import core.loader.LocalLoader;
 

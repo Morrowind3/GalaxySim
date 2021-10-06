@@ -32,10 +32,6 @@ public class FileSelectorController implements Mediator {
         return stage;
     }
 
-    public String getName(){
-        return "FileSelectorController";
-    }
-
     @Override
     public void registerComponent(Component component) {
         component.setMediator(this);

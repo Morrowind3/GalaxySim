@@ -1,6 +1,7 @@
 package client.view.scenes;
 
 import client.view.FileSelector;
+import client.view.KeyConfigBar;
 import core.SupportedFormats;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -29,7 +30,7 @@ public class Launcher{
         borderPane.setCenter(simulationView);
     }
 
-    public void Show(Stage stage, FileSelector selector){
+    public void Show(Stage stage, KeyConfigBar keyConfigBar, FileSelector selector){
         final StringBuilder welcomeStringBuilder = new StringBuilder("Welcome to the Flat Galaxy Simulator! \nPlease provide a valid resource for planets.\n")
                 .append("\nThe following formats are supported:");
         for (SupportedFormats format : SupportedFormats.values()) {
@@ -40,8 +41,9 @@ public class Launcher{
         welcomeMessage.setText(welcomeStringBuilder.toString());
         welcomeMessage.setFont(Font.font ("Verdana", 20));
 
-        borderPane.setBottom(selector);
+        borderPane.setTop(keyConfigBar);
         borderPane.setCenter(welcomeMessage);
+        borderPane.setBottom(selector);
 
         launcherScene = new Scene(borderPane);
         stage.setScene(launcherScene);

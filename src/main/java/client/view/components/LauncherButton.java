@@ -17,6 +17,12 @@ public class LauncherButton extends Button implements Component {
         setFocusTraversable(false);
     }
 
+    public LauncherButton(String text){
+        name = "Unnamed";
+        setText(text);
+        setFocusTraversable(false);
+    }
+
     public void setCommand(EventHandler<Event> command) {
         setOnAction(command::handle);
     }
