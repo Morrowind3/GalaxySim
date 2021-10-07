@@ -35,12 +35,27 @@ public abstract class CollisionStrategy {
         collided.accept(bounceVisitor);
     }
 
-    protected void checkOutOfBoundsCollision(CelestialBody celestialBody){
-            if(celestialBody.getCenterX() + celestialBody.getRadius() >= width || celestialBody.getCenterX() - celestialBody.getRadius() <= 0){
-                celestialBody.invertVelocityX();
-            } else
-            if(celestialBody.getCenterY() + celestialBody.getRadius() >= height || celestialBody.getCenterY() - celestialBody.getRadius() <= 0){
-                celestialBody.invertVelocityY();
-            }
+    protected void checkOutOfBoundsCollision(CelestialBody celestialBody) {
+        float correctionDistanceRight = (Math.abs(celestialBody.getCenterX() + celestialBody.getRadius()) % width) + celestialBody.getRadius()*1.8f;
+        float correctionDistanceLeft = Math.abs(celestialBody.getPositionX()) % width;
+        float correctionDistanceTop = Math.abs(celestialBody.getPositionY()) % height;
+        float correctionDistanceBottom = (Math.abs(celestialBody.getCenterY() + celestialBody.getRadius()) % height) + celestialBody.getRadius()*1.8f;
+
+        if (celestialBody.getCenterX() + celestialBody.getRadius() >= width) {
+            celestialBody.setPosition(width-correctionDistanceRight, celestialBody.getPositionY());
+            celestialBody.invertVelocityX();
+        } else
+        if (celestialBody.getPositionX() <= 0) {
+            celestialBody.setPosition(correctionDistanceLeft, celestialBody.getPositionY());
+            celestialBody.invertVelocityX();
+        } else
+        if (celestialBody.getCenterY() + celestialBody.getRadius() >= height) {
+            celestialBody.setPosition(celestialBody.getPositionX(), height-correctionDistanceBottom );
+            celestialBody.invertVelocityY();
+        } else
+        if (celestialBody.getPositionY() <= 0) {
+            celestialBody.setPosition(celestialBody.getPositionX(), correctionDistanceTop);
+            celestialBody.invertVelocityY();
+        }
     }
 }

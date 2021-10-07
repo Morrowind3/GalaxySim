@@ -39,6 +39,7 @@ public abstract class CelestialBody extends Observable implements Destructable, 
 
     public void setColour(String colourName){
         this.colour = colourName;
+        setChanged();
     }
 
     @Override
@@ -68,6 +69,7 @@ public abstract class CelestialBody extends Observable implements Destructable, 
     }
     public void setRadius(float radius){
         this.radius = radius;
+        setChanged();
     }
 
     public String getName(){
