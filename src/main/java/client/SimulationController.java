@@ -7,9 +7,6 @@ import client.view.components.CelestialBodyComponent;
 import client.view.components.Component;
 import client.view.components.HyperlaneComponent;
 import core.*;
-import core.exceptions.InvalidDataException;
-import core.loader.Loader;
-import core.loader.LoaderFactory;
 
 import java.util.*;
 
@@ -17,49 +14,35 @@ public class SimulationController implements Mediator {
     private static final int SIMULATION_HEIGHT = 600;
     private static final int SIMULATION_WIDTH = 800;
 
-    private CollisionStrategy collisionStrategy;
-    private final List<CelestialBody> celestialBodyModels = new ArrayList<>();
-    private final CelestialBodyBuilder builder = new CelestialBodyBuilder();
     private final SimulationView simulationView;
+    private final MementoKeeper mementoKeeper = new MementoKeeper();
     private final SuperController superController;
+    private final GalaxySimulation simulation = new GalaxySimulation();
 
     public SimulationController(SuperController superController){
         this.superController = superController;
-        collisionStrategy = new SimpleCollisionStrategy(SIMULATION_WIDTH, SIMULATION_HEIGHT, celestialBodyModels);
         simulationView = new SimulationView(SIMULATION_WIDTH, SIMULATION_HEIGHT);
+        simulation.setCollisionStrategy(new SimpleCollisionStrategy(SIMULATION_WIDTH, SIMULATION_HEIGHT, simulation.getCelestialBodies()));
     }
 
     public void loadData(String dataUrl){
-        celestialBodyModels.clear();
-        LoaderFactory loaderFactory = new LoaderFactory();
-        String loaderType;
-        if(superController.isLocalSelected()){
-            loaderType = "local";
-        } else {
-            loaderType = "api";
-        }
-        Loader loader = loaderFactory.create(loaderType);
-        try{
-            for(Map<String, ?> celestialBody : loader.loadSimData(dataUrl)){
-                builder.makeNewCelestialBodyFromMap(celestialBody);
-                String[] neighbours = ((String) celestialBody.get("neighbours")).split(",");
-                builder.formHyperlanes(neighbours, celestialBodyModels);
-                celestialBodyModels.add(builder.returnCelestialBody());
-            }
-        } catch (InvalidDataException e){
-            System.out.println(e.getMessage());
+        if(simulation.isStarted()){
             return;
         }
+        simulation.initializeCelestialBodies(dataUrl, superController.isLocalSelected());
         rebuildComponentLists();
-
         superController.setMainContentCanvas(simulationView);
+    }
+
+    public MementoKeeper getMementoKeeper(){
+        return mementoKeeper;
     }
 
     public void rebuildComponentLists(){
         final List<CelestialBodyComponent> celestialBodies = new ArrayList<>();
         final List<HyperlaneComponent> hyperlanes = new ArrayList<>();
 
-        for(CelestialBody model : celestialBodyModels){
+        for(CelestialBody model : simulation.getCelestialBodies()){
             CelestialBodyComponent component = new CelestialBodyComponent(model);
             model.addObserver(component);
             celestialBodies.add(component);
@@ -79,12 +62,13 @@ public class SimulationController implements Mediator {
     }
 
     public void updateSimulation(){
-        for(CelestialBody model : celestialBodyModels){
-            model.move();
-        }
-        collisionStrategy.checkCollisions();
+        simulation.updateSimulation();
         rebuildComponentLists();
         simulationView.renderSimulation();
+    }
+
+    public void saveState(){
+        simulation.saveMemento(mementoKeeper);
     }
 
     @Override

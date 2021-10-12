@@ -5,11 +5,25 @@ import java.util.List;
 
 public class Planet extends CelestialBody {
 
-    private final List<Hyperlane> hyperlanes;
+    private List<Hyperlane> hyperlanes;
 
     public Planet(String name, String colour) {
         super(name, colour);
         hyperlanes = new ArrayList<>();
+    }
+
+    @Override
+    public CelestialBody clone(){
+        Planet clone = new Planet(name, colour);
+        clone.setPosition(positionX, positionY);
+        clone.setVelocity(velocityX, velocityY);
+        clone.radius = radius;
+        clone.hyperlanes = new ArrayList<>(hyperlanes);
+
+        for(CollisionTypes type: collisionTypes) {
+            clone.addCollisionType(type);
+        }
+        return clone;
     }
 
     @Override

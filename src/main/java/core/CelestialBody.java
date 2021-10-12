@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-public abstract class CelestialBody extends Observable implements Destructable, Visited {
-    private final String name;
+public abstract class CelestialBody extends Observable implements Destructable, Visited, Cloneable {
+    protected final String name;
     protected Float positionX, positionY;
     protected Float velocityX, velocityY;
     protected Float radius;
@@ -20,6 +20,8 @@ public abstract class CelestialBody extends Observable implements Destructable, 
         this.colour = colour;
         collisionTypes = new ArrayList<>();
     }
+
+    public abstract CelestialBody clone();
 
     @Override
     public void accept(CollisionVisitor visitor){
