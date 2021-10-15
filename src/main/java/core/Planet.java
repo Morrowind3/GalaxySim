@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Planet extends CelestialBody {
@@ -37,6 +38,12 @@ public class Planet extends CelestialBody {
     public void addHyperlane(Hyperlane hyperlane) {
         if (hyperlanes.contains(hyperlane)) return;
         hyperlanes.add(hyperlane);
+    }
+
+    public void clearHyperlanes(){
+        if(hyperlanes != null){
+            hyperlanes.clear();
+        }
     }
     public List<Hyperlane> getHyperlanes(){
         return hyperlanes;

@@ -64,17 +64,21 @@ public class GalaxySimulation implements MementoOriginator {
     }
 
     protected void setGalaxyList(List<CelestialBody> list){
-
         celestialBodies = list;
     }
 
     @Override
     public void saveMemento(MementoKeeper keeper) {
-        List<CelestialBody> deepCopy = new ArrayList<>();
-        for(CelestialBody celestialBody : celestialBodies) {
-            deepCopy.add(celestialBody.clone());
+        List<CelestialBody> galaxyListDeepCopy = new ArrayList<>();
+        for(CelestialBody celestialBody : celestialBodies){
+            galaxyListDeepCopy.add(celestialBody.clone());
         }
-        keeper.push(new GalaxyMemento(collisionStrategy, deepCopy, this));
+
+        CollisionStrategy strategyCopy = collisionStrategy.clone();
+        strategyCopy.setGalaxyList(galaxyListDeepCopy);
+
+        keeper.push(new GalaxyMemento(strategyCopy, galaxyListDeepCopy, this));
+
     }
 
 
@@ -91,6 +95,14 @@ public class GalaxySimulation implements MementoOriginator {
 
         public void restore() {
             simulation.setCollisionStrategy(collisionStrategy);
+
+            for(CelestialBody clone: planetStates){
+                if(clone instanceof Planet){
+                    for(Hyperlane cloneLane : ((Planet) clone).getHyperlanes()){
+                        cloneLane.resyncPlanets(planetStates);
+                    }
+                }
+            }
             simulation.setGalaxyList(planetStates);
         }
     }

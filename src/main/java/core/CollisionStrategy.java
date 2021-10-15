@@ -4,14 +4,14 @@ import core.collisionvisitors.*;
 
 import java.util.List;
 
-public abstract class CollisionStrategy {
-    private final int width;
-    private final int height;
+public abstract class CollisionStrategy implements Cloneable {
+    protected final int width;
+    protected final int height;
 
     private final CollisionVisitor[] visitors = new CollisionVisitor[4];
     private final BounceVisitor bounceVisitor = new BounceVisitor();
 
-    protected final List<CelestialBody> galaxyList;
+    protected List<CelestialBody> galaxyList;
 
     public CollisionStrategy(int width, int height, List<CelestialBody> galaxyList){
         this.galaxyList = galaxyList;
@@ -23,7 +23,14 @@ public abstract class CollisionStrategy {
         visitors[3] = new BlinkVisitor();
     }
 
+    public void setGalaxyList(List<CelestialBody> galaxyList){
+        this.galaxyList = galaxyList;
+    }
+
     abstract public void checkCollisions();
+
+    @Override
+    abstract public CollisionStrategy clone();
 
     protected void collide(CelestialBody collided, CelestialBody collidedWith){
         for(CollisionVisitor visitor: visitors){

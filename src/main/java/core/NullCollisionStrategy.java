@@ -12,4 +12,9 @@ public class NullCollisionStrategy extends CollisionStrategy {
     public void checkCollisions() {
         return;
     }
+
+    @Override
+    public CollisionStrategy clone() {
+        return this;
+    }
 }

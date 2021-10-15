@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SimpleCollisionStrategy extends CollisionStrategy {
+public class SimpleCollisionStrategy extends CollisionStrategy implements Cloneable {
     //used to track currently intersecting celestialBodies to avoid repeated collisions
     protected final HashMap<CelestialBody, CelestialBody> intersections;
 
@@ -12,6 +12,12 @@ public class SimpleCollisionStrategy extends CollisionStrategy {
         super(width, height, galaxyList);
         intersections = new HashMap<>();
     }
+
+    @Override
+    public CollisionStrategy clone(){
+        return new SimpleCollisionStrategy(width, height, galaxyList);
+    }
+
 
     @Override
     public void checkCollisions() {
