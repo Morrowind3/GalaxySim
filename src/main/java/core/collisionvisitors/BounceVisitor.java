@@ -4,9 +4,10 @@ import core.CelestialBody;
 import core.CollisionTypes;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class BounceVisitor implements CollisionVisitor {
-    private final HashMap<CelestialBody, Integer> bouncyBoiBounceCounter = new HashMap<>();
+    private final HashMap<CelestialBody, Integer> bounceCounter = new HashMap<>();
     private CelestialBody collidedWith;
 
     public void setCollidedWith(CelestialBody collidedWith){
@@ -15,16 +16,16 @@ public class BounceVisitor implements CollisionVisitor {
 
     @Override
     public void visitCelestialBody(CelestialBody celestialBody) {
-        if(bouncyBoiBounceCounter.get(celestialBody) == null){
-            bouncyBoiBounceCounter.put(celestialBody, 1);
+        if(bounceCounter.get(celestialBody) == null){
+            bounceCounter.put(celestialBody, 1);
         }
-        else if(bouncyBoiBounceCounter.get(celestialBody) < 5){
+        else if(bounceCounter.get(celestialBody) < 5){
             directionalBounce(celestialBody, collidedWith);
-            bouncyBoiBounceCounter.replace(celestialBody, bouncyBoiBounceCounter.get(celestialBody)+1);
+            bounceCounter.replace(celestialBody, bounceCounter.get(celestialBody)+1);
         } else {
             celestialBody.removeCollisionType(getType());
             celestialBody.addCollisionType(CollisionTypes.BLINK);
-            bouncyBoiBounceCounter.remove(celestialBody);
+            bounceCounter.remove(celestialBody);
         }
     }
 

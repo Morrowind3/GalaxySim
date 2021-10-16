@@ -3,10 +3,7 @@ package core.collisionvisitors;
 import core.CelestialBody;
 import core.CollisionTypes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class BlinkVisitor implements CollisionVisitor {
     private final Random random = new Random();

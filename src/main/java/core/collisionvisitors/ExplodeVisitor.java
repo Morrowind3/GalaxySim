@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ExplodeVisitor implements CollisionVisitor {
-    public List<CelestialBody> simulationList;
+    private final List<CelestialBody> simulationList;
 
     private final Random random = new Random();
     private final CelestialBodyBuilder builder = new CelestialBodyBuilder();
@@ -31,10 +31,7 @@ public class ExplodeVisitor implements CollisionVisitor {
             if(random.nextFloat() < 0.5f){
                 asteroid.invertVelocityY();
             }
-            float size = celestialBody.getRadius() / (2f + random.nextFloat());
-            if(size < 3.5f){
-                size = 3.5f;
-            }
+            float size = celestialBody.getRadius() / (2f + random.nextFloat()) + random.nextFloat();
             asteroid.setRadius(size);
             simulationList.add(asteroid);
         }

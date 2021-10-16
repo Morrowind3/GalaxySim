@@ -1,19 +1,33 @@
 package core;
 
 
-public class Hyperlane implements Destructable {
+import java.util.List;
+
+public class Hyperlane implements Destructable, Cloneable {
     private Planet planetA;
     private Planet planetB;
 
     public Hyperlane(Planet planetA, Planet planetB){
-        formNewLane(planetA, planetB);
+        this.planetA = planetA;
+        this.planetB = planetB;
+        planetA.addHyperlane(this);
+        planetB.addHyperlane(this);
     }
 
-    private void formNewLane(Planet planetA, Planet planetB){
-    this.planetA = planetA;
-    this.planetB = planetB;
-    planetA.addHyperlane(this);
-    planetB.addHyperlane(this);
+    public void resyncPlanets(List<CelestialBody> galaxyList){
+        for(CelestialBody planet : galaxyList){
+            if(planet.name.equals(planetA.name)){
+                planetA = (Planet) planet;
+            } else
+            if(planet.name.equals(planetB.name)){
+                planetB = (Planet) planet;
+            }
+        }
+    }
+
+    @Override
+    public Hyperlane clone(){
+        return new Hyperlane(planetA, planetB);
     }
 
     public boolean containsPlanet(Planet planet){
@@ -30,6 +44,7 @@ public class Hyperlane implements Destructable {
         float[] coords = new float[2];
         coords[0] = planetB.getCenterX();
         coords[1] = planetB.getCenterY();
+
         return coords;
     }
 

@@ -1,14 +1,18 @@
 package client.commands;
 
-import javafx.event.ActionEvent;
+import core.MementoKeeper;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.input.KeyEvent;
 
 public class RewindCommand implements EventHandler<Event>{
+    private final MementoKeeper mementoKeeper;
+
+    public RewindCommand(MementoKeeper mementoKeeper){
+        this.mementoKeeper = mementoKeeper;
+    }
 
     @Override
     public void handle(Event event) {
-        //memento pattern
+        mementoKeeper.undo();
     }
 }

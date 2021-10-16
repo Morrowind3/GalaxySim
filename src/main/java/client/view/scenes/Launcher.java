@@ -3,20 +3,12 @@ package client.view.scenes;
 import client.view.FileSelector;
 import client.view.KeyConfigBar;
 import core.SupportedFormats;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Launcher{
     private final BorderPane borderPane = new BorderPane();

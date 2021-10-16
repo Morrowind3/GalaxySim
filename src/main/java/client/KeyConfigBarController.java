@@ -4,6 +4,7 @@ import client.commands.*;
 import client.view.KeyConfigBar;
 import client.view.components.Component;
 import client.view.components.LauncherButton;
+import core.MementoKeeper;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 
@@ -21,7 +22,7 @@ public class KeyConfigBarController implements Mediator {
         this.superController = superController;
 
         //defaults
-        inputHandler.registerKeyCommand(KeyCode.BACK_SPACE, new RewindCommand());
+        inputHandler.registerKeyCommand(KeyCode.BACK_SPACE, new RewindCommand(superController.getMementoKeeper()));
         inputHandler.registerKeyCommand(KeyCode.LEFT, new SpeedDownCommand(superController.getApplicationLoop()));
         inputHandler.registerKeyCommand(KeyCode.RIGHT, new SpeedUpCommand(superController.getApplicationLoop()));
         inputHandler.registerKeyCommand(KeyCode.SPACE, new StartPauseCommand(superController.getApplicationLoop()));
@@ -46,7 +47,7 @@ public class KeyConfigBarController implements Mediator {
             inputHandler.unregisterKeyCommand(key[0]);
             switch(commandName){
                 case COLLISION_MODE -> inputHandler.registerKeyCommand(key[0], new SwitchCollisionAlgorithmCommand());
-                case REWIND -> inputHandler.registerKeyCommand(key[0], new RewindCommand());
+                case REWIND -> inputHandler.registerKeyCommand(key[0], new RewindCommand(superController.getMementoKeeper()));
                 case SPEED_DOWN -> inputHandler.registerKeyCommand(key[0], new SpeedDownCommand(superController.getApplicationLoop()));
                 case SPEED_UP -> inputHandler.registerKeyCommand(key[0], new SpeedUpCommand(superController.getApplicationLoop()));
                 case START_PAUSE -> inputHandler.registerKeyCommand(key[0], new StartPauseCommand(superController.getApplicationLoop()));

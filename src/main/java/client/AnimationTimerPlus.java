@@ -56,12 +56,12 @@ public class AnimationTimerPlus extends AnimationTimer {
         return isRunning;
     }
 
-    public boolean shouldContinue(long now){
+    public boolean shouldPause(long now){
         long timeSinceLastUpdate = now - lastUpdate;
         if (timeSinceLastUpdate <= simulationSpeed) {
-            return false;
+            return true;
         }
         lastUpdate = now;
-        return true;
+        return false;
     }
 }
