@@ -6,7 +6,7 @@ import core.CollisionTypes;
 import java.util.List;
 
 public class DisappearVisitor implements CollisionVisitor {
-    public List<CelestialBody> simulationList;
+    private List<CelestialBody> simulationList;
 
     public DisappearVisitor(List<CelestialBody> list){
         simulationList = list;

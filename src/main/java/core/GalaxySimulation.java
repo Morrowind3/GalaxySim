@@ -94,8 +94,6 @@ public class GalaxySimulation implements MementoOriginator {
         }
 
         public void restore() {
-            simulation.setCollisionStrategy(collisionStrategy);
-
             for(CelestialBody clone: planetStates){
                 if(clone instanceof Planet){
                     for(Hyperlane cloneLane : ((Planet) clone).getHyperlanes()){
@@ -104,6 +102,7 @@ public class GalaxySimulation implements MementoOriginator {
                 }
             }
             simulation.setGalaxyList(planetStates);
+            simulation.setCollisionStrategy(collisionStrategy);
         }
     }
 

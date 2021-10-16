@@ -14,16 +14,14 @@ public class Planet extends CelestialBody {
     }
 
     @Override
-    public CelestialBody clone(){
+    public Planet clone(){
         Planet clone = new Planet(name, colour);
         clone.setPosition(positionX, positionY);
         clone.setVelocity(velocityX, velocityY);
         clone.radius = radius;
         clone.hyperlanes = new ArrayList<>(hyperlanes);
+        clone.collisionTypes = collisionTypes;
 
-        for(CollisionTypes type: collisionTypes) {
-            clone.addCollisionType(type);
-        }
         return clone;
     }
 

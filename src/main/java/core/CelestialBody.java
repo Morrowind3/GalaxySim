@@ -13,7 +13,7 @@ public abstract class CelestialBody extends Observable implements Destructable, 
     protected Float velocityX, velocityY;
     protected Float radius;
     protected String colour;
-    protected final List<CollisionTypes> collisionTypes;
+    protected List<CollisionTypes> collisionTypes;
 
     public CelestialBody(String name, String colour) {
         this.name = name;

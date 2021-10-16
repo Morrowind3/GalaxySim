@@ -8,7 +8,10 @@ public abstract class CollisionStrategy implements Cloneable {
     protected final int width;
     protected final int height;
 
-    private final CollisionVisitor[] visitors = new CollisionVisitor[4];
+    private final GrowVisitor growVisitor = new GrowVisitor();
+    private DisappearVisitor disappearVisitor;
+    private ExplodeVisitor explodeVisitor;
+    private final BlinkVisitor blinkVisitor = new BlinkVisitor();
     private final BounceVisitor bounceVisitor = new BounceVisitor();
 
     protected List<CelestialBody> galaxyList;
@@ -17,27 +20,26 @@ public abstract class CollisionStrategy implements Cloneable {
         this.galaxyList = galaxyList;
         this.width = width;
         this.height = height;
-        visitors[0] = new GrowVisitor();
-        visitors[1] = new DisappearVisitor(galaxyList);
-        visitors[2] = new ExplodeVisitor(galaxyList);
-        visitors[3] = new BlinkVisitor();
+        explodeVisitor = new ExplodeVisitor(galaxyList);
+        disappearVisitor = new DisappearVisitor(galaxyList);
     }
 
     public void setGalaxyList(List<CelestialBody> galaxyList){
         this.galaxyList = galaxyList;
+        explodeVisitor = new ExplodeVisitor(galaxyList);
+        disappearVisitor = new DisappearVisitor(galaxyList);
     }
 
     abstract public void checkCollisions();
-
-    @Override
     abstract public CollisionStrategy clone();
 
     protected void collide(CelestialBody collided, CelestialBody collidedWith){
-        for(CollisionVisitor visitor: visitors){
-            collided.accept(visitor);
-        }
         bounceVisitor.setCollidedWith(collidedWith);
         collided.accept(bounceVisitor);
+        collided.accept(blinkVisitor);
+        collided.accept(explodeVisitor);
+        collided.accept(disappearVisitor);
+        collided.accept(growVisitor);
     }
 
     protected void checkOutOfBoundsCollision(CelestialBody celestialBody) {

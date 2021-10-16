@@ -1,5 +1,7 @@
 package core;
 
+import java.util.ArrayList;
+
 public class Asteroid extends CelestialBody {
 
     public Asteroid(String name, String colour) {
@@ -12,8 +14,7 @@ public class Asteroid extends CelestialBody {
         clone.setPosition(positionX, positionY);
         clone.setVelocity(velocityX, velocityY);
         clone.radius = radius;
+        clone.collisionTypes = collisionTypes;
         return clone;
     }
-
-
 }

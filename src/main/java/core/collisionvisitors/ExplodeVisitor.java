@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ExplodeVisitor implements CollisionVisitor {
-    public List<CelestialBody> simulationList;
+    private final List<CelestialBody> simulationList;
 
     private final Random random = new Random();
     private final CelestialBodyBuilder builder = new CelestialBodyBuilder();

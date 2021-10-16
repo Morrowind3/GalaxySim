@@ -10,8 +10,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
 
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 
@@ -19,21 +21,28 @@ public class SuperController implements Mediator {
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 760;
     private static final String WINDOW_TITLE = "Flat Galaxy Simulator 2021";
+    private static final int MEMENTO_INTERVAL_SEC = 5;
 
     private Launcher launcher;
     private final SimulationController simulationController;
     private FileSelectorController fileSelectorController;
+    private ScheduledFuture mementoScheduledFuture;
     private final AnimationTimerPlus applicationLoop;
+    private final ScheduledExecutorService executor;
+    private final Runnable mementoTimer;
 
     private boolean saveState = false;
 
     public SuperController(){
-        Runnable mementoTimer = () -> saveState = true;
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(mementoTimer, 0, 5, TimeUnit.SECONDS);
+        mementoTimer = () -> saveState = true;
+
+        executor = Executors.newSingleThreadScheduledExecutor();
+        startMementoTimer(false);
 
         simulationController = new SimulationController(this);
+
         applicationLoop = new AnimationTimerPlus(true) {
+            private int saveStateCounter = 0;
             @Override
             public void handle(long now) {
                 if(super.shouldPause(now)) return;
@@ -41,9 +50,25 @@ public class SuperController implements Mediator {
                 if(saveState) {
                     simulationController.saveState();
                     saveState = false;
+                    saveStateCounter++;
+                }
+                if(getMementoKeeper().historySize() < saveStateCounter){
+                    mementoScheduledFuture.cancel(true);
+                    saveStateCounter = getMementoKeeper().historySize();
+                    startMementoTimer(true);
                 }
             }
         };
+    }
+
+    //restarting the timer guarantees the Memento Interval is consistent between rewinds.
+    public void startMementoTimer(boolean delay){
+        if(delay){
+            mementoScheduledFuture = executor.scheduleAtFixedRate(mementoTimer, MEMENTO_INTERVAL_SEC, MEMENTO_INTERVAL_SEC, TimeUnit.SECONDS);
+        } else {
+            mementoScheduledFuture = executor.scheduleAtFixedRate(mementoTimer, 0, MEMENTO_INTERVAL_SEC, TimeUnit.SECONDS);
+
+        }
     }
 
     public MementoKeeper getMementoKeeper(){
