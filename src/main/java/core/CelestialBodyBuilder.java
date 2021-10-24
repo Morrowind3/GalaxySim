@@ -39,8 +39,8 @@ public class CelestialBodyBuilder {
     }
 
     public void makeNewGenericAsteroid(){
-        String name = "Asteroid-" + generateRandomId();
-        celestialBody = new Asteroid(name, "Black");
+//        String name = "Asteroid-" + generateRandomId();
+        celestialBody = new Asteroid(null, "Black");
         celestialBody.setRadius(5);
         celestialBody.addCollisionType(CollisionTypes.BOUNCE);
     }

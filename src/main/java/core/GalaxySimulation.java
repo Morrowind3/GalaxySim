@@ -1,6 +1,7 @@
 package core;
 
-import client.SimulationController;
+import core.collisionstrategy.CollisionStrategy;
+import core.collisionstrategy.NullCollisionStrategy;
 import core.exceptions.InvalidDataException;
 import core.loader.Loader;
 import core.loader.LoaderFactory;
@@ -27,7 +28,9 @@ public class GalaxySimulation implements MementoOriginator {
     public void setCollisionStrategy(CollisionStrategy strategy){
         this.collisionStrategy = strategy;
     }
-
+    public CollisionStrategy getCollisionStrategy(){
+        return collisionStrategy;
+    }
     public List<CelestialBody> getCelestialBodies(){
         return celestialBodies;
     }
@@ -36,6 +39,7 @@ public class GalaxySimulation implements MementoOriginator {
         for(CelestialBody model : celestialBodies){
             model.move();
         }
+        collisionStrategy.setGalaxyList(celestialBodies);
         collisionStrategy.checkCollisions();
     }
 

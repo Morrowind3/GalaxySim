@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
-public class StartPauseCommand implements EventHandler<Event>  {
+public class StartPauseCommand implements Command {
     private final AnimationTimerPlus timer;
 
     public StartPauseCommand(AnimationTimerPlus timer){
@@ -17,5 +17,10 @@ public class StartPauseCommand implements EventHandler<Event>  {
         if(timer.isRunning()){
             timer.stop();
         } else timer.start();
+    }
+
+    @Override
+    public CommandNames getCommandName() {
+        return CommandNames.START_PAUSE;
     }
 }

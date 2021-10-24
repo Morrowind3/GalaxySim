@@ -5,7 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
-public class LoadSimulationCommand implements EventHandler<Event> {
+public class LoadSimulationCommand implements Command {
     private final FileSelectorController controller;
 
     public LoadSimulationCommand(FileSelectorController controller){
@@ -15,5 +15,10 @@ public class LoadSimulationCommand implements EventHandler<Event> {
     @Override
     public void handle(Event event) {
         controller.loadButtonPressed();
+    }
+
+    @Override
+    public CommandNames getCommandName() {
+        return CommandNames.LOAD_SIMULATION;
     }
 }
