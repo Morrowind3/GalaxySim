@@ -1,16 +1,19 @@
-package core;
+package core.collisionstrategy;
 
-import java.util.ArrayList;
+import core.CelestialBody;
+
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+//TODO: Implement hitbox interface here as well.
 
 public class SimpleCollisionStrategy extends CollisionStrategy implements Cloneable {
     //used to track currently intersecting celestialBodies to avoid repeated collisions
-    protected final HashMap<CelestialBody, CelestialBody> intersections;
 
     public SimpleCollisionStrategy(int width, int height, List<CelestialBody> galaxyList) {
         super(width, height, galaxyList);
-        intersections = new HashMap<>();
     }
 
     @Override
@@ -27,16 +30,16 @@ public class SimpleCollisionStrategy extends CollisionStrategy implements Clonea
                 CelestialBody first = galaxyList.get(a);
                 CelestialBody second = galaxyList.get(b);
 
-                boolean sameHeight = first.getCenterY() + first.getRadius() >= second.getPositionY() && first.getPositionY() <= second.getCenterY() + second.getRadius();
-                boolean sameBreadth = first.getCenterX() + first.getRadius() >= second.getPositionX() && first.getPositionX() <= second.getCenterX() + second.getRadius();
+                boolean colliding = areColliding(first, second);
+
                 boolean firstIsIntersecting = intersections.get(first) == second;
                 boolean secondIsIntersecting = intersections.get(second) == first;
 
-                if(sameBreadth && sameHeight && (!firstIsIntersecting && !secondIsIntersecting)){
+                if(colliding && (!firstIsIntersecting && !secondIsIntersecting)){
                     collide(first, second);
                     collide(second, first);
                     intersections.put(first, second);
-                } else if (!sameBreadth && !sameHeight && (firstIsIntersecting && secondIsIntersecting)){
+                } else if (!colliding && (firstIsIntersecting && secondIsIntersecting)){
                     intersections.remove(first);
                     intersections.remove(second);
                 }

@@ -10,7 +10,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.util.Locale;
 
-public class SelectFileCommand implements EventHandler<Event> {
+public class SelectFileCommand implements  Command {
     private final FileSelectorController controller;
 
     public SelectFileCommand(FileSelectorController controller){
@@ -41,4 +41,8 @@ public class SelectFileCommand implements EventHandler<Event> {
         }
     }
 
+    @Override
+    public CommandNames getCommandName() {
+        return CommandNames.SELECT_FILE;
+    }
 }

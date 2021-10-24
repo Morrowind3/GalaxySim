@@ -1,16 +1,17 @@
 package client;
 
+import client.commands.*;
 import client.view.KeyConfigBar;
 import client.view.components.Component;
 import client.view.FileSelector;
 import client.view.scenes.Launcher;
-import core.MementoKeeper;
+import core.collisionstrategy.QuadTreeCollisionStrategy;
+import core.collisionstrategy.SimpleCollisionStrategy;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class SuperController implements Mediator {
-    private static final int WINDOW_WIDTH = 800;
+    private static final int WINDOW_WIDTH = 810;
     private static final int WINDOW_HEIGHT = 760;
     private static final String WINDOW_TITLE = "Flat Galaxy Simulator 2021";
     private static final int MEMENTO_INTERVAL_SEC = 5;
@@ -52,9 +53,9 @@ public class SuperController implements Mediator {
                     saveState = false;
                     saveStateCounter++;
                 }
-                if(getMementoKeeper().historySize() < saveStateCounter){
+                if(simulationController.getMementoKeeper().historySize() < saveStateCounter){
                     mementoScheduledFuture.cancel(true);
-                    saveStateCounter = getMementoKeeper().historySize();
+                    saveStateCounter = simulationController.getMementoKeeper().historySize();
                     startMementoTimer(true);
                 }
             }
@@ -71,10 +72,6 @@ public class SuperController implements Mediator {
         }
     }
 
-    public MementoKeeper getMementoKeeper(){
-        return simulationController.getMementoKeeper();
-    }
-
     public boolean isLocalSelected(){
         return true;
     }
@@ -83,10 +80,6 @@ public class SuperController implements Mediator {
         simulationController.loadData(dataUrl);
         simulationController.updateSimulation();
         applicationLoop.ready();
-    }
-
-    public AnimationTimerPlus getApplicationLoop(){
-        return applicationLoop;
     }
 
     public void setMainContentCanvas(Canvas mainContent){
@@ -106,10 +99,22 @@ public class SuperController implements Mediator {
         KeyConfigBar keyConfigBar = new KeyConfigBar();
         launcher.Show(primaryStage, keyConfigBar, fileSelector);
 
-        InputHandler inputHandler = new InputHandler(launcher.getScene(), this);
+        InputHandler inputHandler = new InputHandler(launcher.getScene());
+        inputHandler.registerKeyCommand(KeyCode.LEFT, new SpeedDownCommand(applicationLoop));
+        inputHandler.registerKeyCommand(KeyCode.BACK_SPACE, new RewindCommand(simulationController.getMementoKeeper()));
+        inputHandler.registerKeyCommand(KeyCode.RIGHT, new SpeedUpCommand(applicationLoop));
+        inputHandler.registerKeyCommand(KeyCode.SPACE, new StartPauseCommand(applicationLoop));
+        inputHandler.registerKeyCommand(KeyCode.G, new ShowGridCommand(simulationController));
+        inputHandler.registerKeyCommand(KeyCode.L, new ShowPlanetNamesCommand(simulationController));
+
+
+        SwitchCollisionAlgorithmCommand collisionCommand = new SwitchCollisionAlgorithmCommand(simulationController);
+        collisionCommand.addAlgorithmChoice(new SimpleCollisionStrategy(SimulationController.SIMULATION_WIDTH, SimulationController.SIMULATION_HEIGHT, simulationController.getCelestialBodies()));
+        collisionCommand.addAlgorithmChoice(new QuadTreeCollisionStrategy(SimulationController.SIMULATION_WIDTH, SimulationController.SIMULATION_HEIGHT, simulationController.getCelestialBodies()));
+        inputHandler.registerKeyCommand(KeyCode.C, collisionCommand);
+
         KeyConfigBarController keyConfigBarController = new KeyConfigBarController(inputHandler, this);
         keyConfigBarController.registerComponent(keyConfigBar);
-
     }
 
     @Override

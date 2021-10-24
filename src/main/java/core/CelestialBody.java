@@ -1,13 +1,16 @@
 package core;
 
+import core.collisionstrategy.Hitbox;
 import core.collisionvisitors.Visited;
 import core.collisionvisitors.CollisionVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.UUID;
 
-public abstract class CelestialBody extends Observable implements Destructable, Visited, Cloneable {
+public abstract class CelestialBody extends Observable implements Destructable, Visited, Cloneable, Hitbox {
+    private final String id;
     protected final String name;
     protected Float positionX, positionY;
     protected Float velocityX, velocityY;
@@ -19,6 +22,8 @@ public abstract class CelestialBody extends Observable implements Destructable, 
         this.name = name;
         this.colour = colour;
         collisionTypes = new ArrayList<>();
+
+        this.id = UUID.randomUUID().toString();
     }
 
     public abstract CelestialBody clone();
@@ -97,8 +102,40 @@ public abstract class CelestialBody extends Observable implements Destructable, 
     public Float getCenterX() {
         return positionX + getRadius();
     }
-
     public Float getCenterY() {
         return positionY + getRadius();
+    }
+
+    @Override
+    public Float getHeight(){
+        return getRadius()*2;
+    }
+    @Override
+    public void setHeight(Float h){
+        radius = h/2;
+    }
+    @Override
+    public Float getWidth(){
+        return getRadius()*2;
+    }
+    @Override
+    public void setWidth(Float w){
+        radius = w/2;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || o.getClass() != getClass()) return false;
+        CelestialBody compare = (CelestialBody) o;
+        return name.equals(compare.name)
+                && radius.equals(compare.radius) && positionX.equals(compare.positionX)
+                && positionY.equals(compare.positionY) && velocityX.equals(compare.velocityX)
+                && velocityY.equals(compare.velocityY);
+    }
+
+    @Override
+    public String getId(){
+        return id;
     }
 }

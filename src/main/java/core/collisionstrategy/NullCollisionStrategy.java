@@ -1,4 +1,6 @@
-package core;
+package core.collisionstrategy;
+
+import core.CelestialBody;
 
 import java.util.List;
 

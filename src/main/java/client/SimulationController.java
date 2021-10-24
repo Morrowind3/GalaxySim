@@ -1,18 +1,21 @@
 package client;
 
-import client.SuperController;
-import client.Mediator;
 import client.view.SimulationView;
 import client.view.components.CelestialBodyComponent;
 import client.view.components.Component;
+import client.view.components.GridComponent;
 import client.view.components.HyperlaneComponent;
 import core.*;
+import core.collisionstrategy.CollisionStrategy;
+import core.collisionstrategy.QuadTree;
+import core.collisionstrategy.QuadTreeCollisionStrategy;
+import core.collisionstrategy.SimpleCollisionStrategy;
 
 import java.util.*;
 
 public class SimulationController implements Mediator {
-    private static final int SIMULATION_HEIGHT = 600;
-    private static final int SIMULATION_WIDTH = 800;
+    public static final int SIMULATION_HEIGHT = 600;
+    public static final int SIMULATION_WIDTH = 800;
 
     private final SimulationView simulationView;
     private final MementoKeeper mementoKeeper = new MementoKeeper();
@@ -22,7 +25,12 @@ public class SimulationController implements Mediator {
     public SimulationController(SuperController superController){
         this.superController = superController;
         simulationView = new SimulationView(SIMULATION_WIDTH, SIMULATION_HEIGHT);
+        simulationView.setMediator(this);
         simulation.setCollisionStrategy(new SimpleCollisionStrategy(SIMULATION_WIDTH, SIMULATION_HEIGHT, simulation.getCelestialBodies()));
+    }
+
+    public List<CelestialBody> getCelestialBodies(){
+       return simulation.getCelestialBodies();
     }
 
     public void loadData(String dataUrl){
@@ -32,6 +40,18 @@ public class SimulationController implements Mediator {
         simulation.initializeCelestialBodies(dataUrl, superController.isLocalSelected());
         rebuildComponentLists();
         superController.setMainContentCanvas(simulationView);
+    }
+
+    public void toggleGrid(){
+        simulationView.toggleGrid();
+    }
+
+    public void togglePlanetNames(){
+        simulationView.togglePlanetLabels();
+    }
+
+    public void setCollisionStrategy(CollisionStrategy strategy){
+        simulation.setCollisionStrategy(strategy);
     }
 
     public MementoKeeper getMementoKeeper(){
@@ -55,6 +75,9 @@ public class SimulationController implements Mediator {
         }
         simulationView.setCelestialBodyComponents(celestialBodies);
         simulationView.setHyperlaneComponents(hyperlanes);
+        if(simulation.getCollisionStrategy() instanceof QuadTreeCollisionStrategy){ //TODO: Typecheck
+            simulationView.setGrid(new GridComponent(((QuadTreeCollisionStrategy)simulation.getCollisionStrategy()).getQuadTree()));
+        }
     }
 
     public String getName(){
@@ -65,6 +88,10 @@ public class SimulationController implements Mediator {
         simulation.updateSimulation();
         rebuildComponentLists();
         simulationView.renderSimulation();
+    }
+
+    public CollisionStrategy getCollisionStrategy(){
+        return simulation.getCollisionStrategy();
     }
 
     public void saveState(){

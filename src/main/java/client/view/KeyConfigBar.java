@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class KeyConfigBar extends HBox implements Component {
     private KeyConfigBarController controller;
-    private final LauncherButton[] configurableButtons = new LauncherButton[5];
+    private final LauncherButton[] configurableButtons = new LauncherButton[7];
 
     public KeyConfigBar(){
         setPadding(new Insets(15, 12, 15, 12));
@@ -32,6 +32,9 @@ public class KeyConfigBar extends HBox implements Component {
         makeCommandButton(2, CommandNames.SPEED_DOWN, KeyCode.LEFT);
         makeCommandButton(3, CommandNames.START_PAUSE, KeyCode.SPACE);
         makeCommandButton(4, CommandNames.COLLISION_MODE, KeyCode.C);
+        makeCommandButton(5, CommandNames.SHOW_GRID, KeyCode.G);
+        makeCommandButton(6, CommandNames.SHOW_PLANET_NAMES, KeyCode.L);
+
 
         Region whiteSpace = new Region();
         HBox.setHgrow(whiteSpace, Priority.ALWAYS);

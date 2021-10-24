@@ -4,7 +4,7 @@ import core.MementoKeeper;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
-public class RewindCommand implements EventHandler<Event>{
+public class RewindCommand implements Command{
     private final MementoKeeper mementoKeeper;
 
     public RewindCommand(MementoKeeper mementoKeeper){
@@ -14,5 +14,10 @@ public class RewindCommand implements EventHandler<Event>{
     @Override
     public void handle(Event event) {
         mementoKeeper.undo();
+    }
+
+    @Override
+    public CommandNames getCommandName() {
+        return CommandNames.REWIND;
     }
 }
