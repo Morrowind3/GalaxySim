@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SuperController implements Mediator {
     private static final int WINDOW_WIDTH = 810;
-    private static final int WINDOW_HEIGHT = 760;
+    private static final int WINDOW_HEIGHT = 800;
     private static final String WINDOW_TITLE = "Flat Galaxy Simulator 2021";
     private static final int MEMENTO_INTERVAL_SEC = 5;
 
@@ -106,6 +106,10 @@ public class SuperController implements Mediator {
         inputHandler.registerKeyCommand(KeyCode.SPACE, new StartPauseCommand(applicationLoop));
         inputHandler.registerKeyCommand(KeyCode.G, new ShowGridCommand(simulationController));
         inputHandler.registerKeyCommand(KeyCode.L, new ShowPlanetNamesCommand(simulationController));
+        inputHandler.registerKeyCommand(KeyCode.ADD, new AddAsteroidCommand(simulationController, SimulationController.SIMULATION_WIDTH,  SimulationController.SIMULATION_HEIGHT ));
+        inputHandler.registerKeyCommand(KeyCode.SUBTRACT, new RemoveAsteroidCommand(simulationController));
+
+        keyConfigBar.formCommandButtons(inputHandler.getKeyCommands());
 
 
         SwitchCollisionAlgorithmCommand collisionCommand = new SwitchCollisionAlgorithmCommand(simulationController);

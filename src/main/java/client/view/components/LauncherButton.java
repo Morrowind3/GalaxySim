@@ -1,10 +1,12 @@
 package client.view.components;
 
 import client.Mediator;
+import client.commands.CommandNames;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 
 public class LauncherButton extends Button implements Component {
     private final String name;

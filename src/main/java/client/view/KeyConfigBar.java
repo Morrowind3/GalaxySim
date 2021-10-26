@@ -2,51 +2,62 @@ package client.view;
 
 import client.KeyConfigBarController;
 import client.Mediator;
+import client.commands.Command;
 import client.commands.CommandNames;
 import client.view.components.Component;
 import client.view.components.LauncherButton;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
-import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class KeyConfigBar extends HBox implements Component {
     private KeyConfigBarController controller;
-    private final LauncherButton[] configurableButtons = new LauncherButton[7];
+//    private LauncherButton[] configurableButtons;
+
+    private final Background background;
 
     public KeyConfigBar(){
         setPadding(new Insets(15, 12, 15, 12));
         setSpacing(5);
         BackgroundFill backgroundFill = new BackgroundFill(Color.CORNFLOWERBLUE, null, null);
-        Background bg = new Background(backgroundFill);
-        setBackground(bg);
-
-        Label label = new Label("Configure \n Keys:");
-        makeCommandButton(0, CommandNames.REWIND, KeyCode.BACK_SPACE);
-        makeCommandButton(1, CommandNames.SPEED_UP, KeyCode.RIGHT);
-        makeCommandButton(2, CommandNames.SPEED_DOWN, KeyCode.LEFT);
-        makeCommandButton(3, CommandNames.START_PAUSE, KeyCode.SPACE);
-        makeCommandButton(4, CommandNames.COLLISION_MODE, KeyCode.C);
-        makeCommandButton(5, CommandNames.SHOW_GRID, KeyCode.G);
-        makeCommandButton(6, CommandNames.SHOW_PLANET_NAMES, KeyCode.L);
-
-
-        Region whiteSpace = new Region();
-        HBox.setHgrow(whiteSpace, Priority.ALWAYS);
-        getChildren().add(label);
-        getChildren().addAll(configurableButtons);
+        background = new Background(backgroundFill);
+        setBackground(background);
     }
 
-    private void makeCommandButton(int pos, CommandNames commandName, KeyCode defaultKey){
-        configurableButtons[pos] = new LauncherButton( commandName.getName() + "\n(" + defaultKey.getName() + ")");
-        configurableButtons[pos].setOnMouseClicked( event -> {
-            controller.showKeyConfigurationDialogue(configurableButtons[pos], commandName);
+    public void formCommandButtons(HashMap<KeyCode, Command> commands){
+        AtomicInteger pos = new AtomicInteger();
+        final VBox[] buttonColumn = {newButtonColumn()};
+        commands.forEach((key, value) -> {
+            LauncherButton button = makeCommandButton(pos.getAndIncrement(), value.getCommandName(), key);
+            button.setPrefWidth(getWidth()/(commands.size())*2 );
+            if(pos.get() % 2 == 1){
+                getChildren().add(buttonColumn[0]);
+                buttonColumn[0] = newButtonColumn();
+            }
+            buttonColumn[0].getChildren().add(button);
         });
+        if(pos.get() % 2 == 0){
+            getChildren().add(buttonColumn[0]);
+        }
+    }
+
+    private VBox newButtonColumn(){
+        VBox buttonColumn = new VBox();
+        buttonColumn.setBackground(background);
+        return buttonColumn;
+    }
+
+    private LauncherButton makeCommandButton(int pos, CommandNames commandName, KeyCode defaultKey){
+        LauncherButton button = new LauncherButton( commandName.getName() + "\n(" + defaultKey.getName() + ")");
+        button.setOnMouseClicked( event -> {
+            controller.showKeyConfigurationDialogue(button, commandName);
+        });
+        return button;
     }
 
     @Override

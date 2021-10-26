@@ -24,13 +24,7 @@ public class ExplodeVisitor implements CollisionVisitor {
             builder.makeNewGenericAsteroid();
             Asteroid asteroid = (Asteroid) builder.returnCelestialBody();
             asteroid.setPosition(celestialBody.getPositionX(), celestialBody.getPositionY());
-            asteroid.setVelocity(1f + random.nextFloat(), 1f + random.nextFloat());
-            if(random.nextFloat() < 0.5f){
-                asteroid.invertVelocityX();
-            }
-            if(random.nextFloat() < 0.5f){
-                asteroid.invertVelocityY();
-            }
+
             float size = celestialBody.getRadius() / (2f + random.nextFloat()) + random.nextFloat();
             asteroid.setRadius(size);
             simulationList.add(asteroid);

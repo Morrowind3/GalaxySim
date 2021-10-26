@@ -38,6 +38,10 @@ public class InputHandler {
         refreshKeyListeners();
     };
 
+    public HashMap<KeyCode, Command> getKeyCommands(){
+        return keyCommands;
+    }
+
     public void unregisterKeyCommand(KeyCode key){
         keyCommands.remove(key);
         refreshKeyListeners();
