@@ -18,7 +18,7 @@ public class SimulationController implements Mediator {
     public static final int SIMULATION_WIDTH = 800;
 
     private final SimulationView simulationView;
-    private final MementoKeeper mementoKeeper = new MementoKeeper();
+    private MementoKeeper mementoKeeper = new MementoKeeper();
     private final SuperController superController;
     private final GalaxySimulation simulation = new GalaxySimulation();
 
@@ -29,14 +29,13 @@ public class SimulationController implements Mediator {
         simulation.setCollisionStrategy(new SimpleCollisionStrategy(SIMULATION_WIDTH, SIMULATION_HEIGHT, simulation.getCelestialBodies()));
     }
 
+
     public List<CelestialBody> getCelestialBodies(){
        return simulation.getCelestialBodies();
     }
 
     public void loadData(String dataUrl){
-        if(simulation.isStarted()){
-            return;
-        }
+        mementoKeeper = new MementoKeeper();
         simulation.initializeCelestialBodies(dataUrl, superController.isLocalSelected());
         rebuildComponentLists();
         superController.setMainContentCanvas(simulationView);

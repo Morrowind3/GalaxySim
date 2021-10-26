@@ -15,14 +15,9 @@ public class GalaxySimulation implements MementoOriginator {
     private List<CelestialBody> celestialBodies = new ArrayList<>();
     private final CelestialBodyBuilder builder = new CelestialBodyBuilder();
     private CollisionStrategy collisionStrategy;
-    private boolean started = false;
 
     public GalaxySimulation(){
         collisionStrategy = new NullCollisionStrategy(0,0,null);
-    }
-
-    public boolean isStarted(){
-        return started;
     }
 
     public void setCollisionStrategy(CollisionStrategy strategy){
@@ -64,7 +59,6 @@ public class GalaxySimulation implements MementoOriginator {
             System.out.println(e.getMessage());
             return;
         }
-        started = true;
     }
 
     protected void setGalaxyList(List<CelestialBody> list){

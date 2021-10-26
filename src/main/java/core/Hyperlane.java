@@ -16,6 +16,7 @@ public class Hyperlane implements Destructable, Cloneable {
 
     public void resyncPlanets(List<CelestialBody> galaxyList){
         for(CelestialBody planet : galaxyList){
+            if(planet.name == null) continue;
             if(planet.name.equals(planetA.name)){
                 planetA = (Planet) planet;
             } else

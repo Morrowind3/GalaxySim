@@ -101,7 +101,7 @@ public class SuperController implements Mediator {
 
         InputHandler inputHandler = new InputHandler(launcher.getScene());
         inputHandler.registerKeyCommand(KeyCode.LEFT, new SpeedDownCommand(applicationLoop));
-        inputHandler.registerKeyCommand(KeyCode.BACK_SPACE, new RewindCommand(simulationController.getMementoKeeper()));
+        inputHandler.registerKeyCommand(KeyCode.BACK_SPACE, new RewindCommand(simulationController));
         inputHandler.registerKeyCommand(KeyCode.RIGHT, new SpeedUpCommand(applicationLoop));
         inputHandler.registerKeyCommand(KeyCode.SPACE, new StartPauseCommand(applicationLoop));
         inputHandler.registerKeyCommand(KeyCode.G, new ShowGridCommand(simulationController));
@@ -109,13 +109,13 @@ public class SuperController implements Mediator {
         inputHandler.registerKeyCommand(KeyCode.ADD, new AddAsteroidCommand(simulationController, SimulationController.SIMULATION_WIDTH,  SimulationController.SIMULATION_HEIGHT ));
         inputHandler.registerKeyCommand(KeyCode.SUBTRACT, new RemoveAsteroidCommand(simulationController));
 
-        keyConfigBar.formCommandButtons(inputHandler.getKeyCommands());
-
-
         SwitchCollisionAlgorithmCommand collisionCommand = new SwitchCollisionAlgorithmCommand(simulationController);
         collisionCommand.addAlgorithmChoice(new SimpleCollisionStrategy(SimulationController.SIMULATION_WIDTH, SimulationController.SIMULATION_HEIGHT, simulationController.getCelestialBodies()));
         collisionCommand.addAlgorithmChoice(new QuadTreeCollisionStrategy(SimulationController.SIMULATION_WIDTH, SimulationController.SIMULATION_HEIGHT, simulationController.getCelestialBodies()));
         inputHandler.registerKeyCommand(KeyCode.C, collisionCommand);
+
+        keyConfigBar.formCommandButtons(inputHandler.getKeyCommands());
+
 
         KeyConfigBarController keyConfigBarController = new KeyConfigBarController(inputHandler, this);
         keyConfigBarController.registerComponent(keyConfigBar);
