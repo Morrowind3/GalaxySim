@@ -7,7 +7,6 @@ import client.view.components.GridComponent;
 import client.view.components.HyperlaneComponent;
 import core.*;
 import core.collisionstrategy.CollisionStrategy;
-import core.collisionstrategy.QuadTree;
 import core.collisionstrategy.QuadTreeCollisionStrategy;
 import core.collisionstrategy.SimpleCollisionStrategy;
 
@@ -28,7 +27,6 @@ public class SimulationController implements Mediator {
         simulationView.setMediator(this);
         simulation.setCollisionStrategy(new SimpleCollisionStrategy(SIMULATION_WIDTH, SIMULATION_HEIGHT, simulation.getCelestialBodies()));
     }
-
 
     public List<CelestialBody> getCelestialBodies(){
        return simulation.getCelestialBodies();

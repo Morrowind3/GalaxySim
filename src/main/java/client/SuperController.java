@@ -5,6 +5,7 @@ import client.view.KeyConfigBar;
 import client.view.components.Component;
 import client.view.FileSelector;
 import client.view.scenes.Launcher;
+import core.RouteCalculator;
 import core.collisionstrategy.QuadTreeCollisionStrategy;
 import core.collisionstrategy.SimpleCollisionStrategy;
 import javafx.application.Platform;
@@ -108,6 +109,9 @@ public class SuperController implements Mediator {
         inputHandler.registerKeyCommand(KeyCode.L, new ShowPlanetNamesCommand(simulationController));
         inputHandler.registerKeyCommand(KeyCode.ADD, new AddAsteroidCommand(simulationController, SimulationController.SIMULATION_WIDTH,  SimulationController.SIMULATION_HEIGHT ));
         inputHandler.registerKeyCommand(KeyCode.SUBTRACT, new RemoveAsteroidCommand(simulationController));
+        inputHandler.registerKeyCommand(KeyCode.S, new ShortestRouteCommand(simulationController));
+        inputHandler.registerKeyCommand(KeyCode.Q, new QuickestrouteCommand());
+
 
         SwitchCollisionAlgorithmCommand collisionCommand = new SwitchCollisionAlgorithmCommand(simulationController);
         collisionCommand.addAlgorithmChoice(new SimpleCollisionStrategy(SimulationController.SIMULATION_WIDTH, SimulationController.SIMULATION_HEIGHT, simulationController.getCelestialBodies()));

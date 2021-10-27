@@ -17,12 +17,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class KeyConfigBar extends HBox implements Component {
     private KeyConfigBarController controller;
-//    private LauncherButton[] configurableButtons;
 
     private final Background background;
 
     public KeyConfigBar(){
-        setPadding(new Insets(15, 12, 15, 12));
+        setPadding(new Insets(5, 5, 5, 5));
         setSpacing(5);
         BackgroundFill backgroundFill = new BackgroundFill(Color.CORNFLOWERBLUE, null, null);
         background = new Background(backgroundFill);
@@ -35,15 +34,15 @@ public class KeyConfigBar extends HBox implements Component {
         commands.forEach((key, value) -> {
             LauncherButton button = makeCommandButton(pos.getAndIncrement(), value.getCommandName(), key);
             button.setPrefWidth(getWidth()/(commands.size())*2 );
-            if(pos.get() % 2 == 0){
+            if(pos.get() % 2 == 1){
                 getChildren().add(buttonColumn[0]);
                 buttonColumn[0] = newButtonColumn();
             }
             buttonColumn[0].getChildren().add(button);
         });
-        if(pos.get() % 2 == 1){
+//        if(pos.get() % 2 == 1){
             getChildren().add(buttonColumn[0]);
-        }
+//        }
     }
 
     private VBox newButtonColumn(){

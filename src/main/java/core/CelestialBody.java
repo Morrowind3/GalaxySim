@@ -16,11 +16,14 @@ public abstract class CelestialBody extends Observable implements Destructable, 
     protected Float velocityX, velocityY;
     protected Float radius;
     protected String colour;
+    protected String borderColour;
+
     protected List<CollisionTypes> collisionTypes;
 
     public CelestialBody(String name, String colour) {
         this.name = name;
         this.colour = colour;
+        this.borderColour = "Transparent";
         collisionTypes = new ArrayList<>();
 
         this.id = UUID.randomUUID().toString();
@@ -45,7 +48,11 @@ public abstract class CelestialBody extends Observable implements Destructable, 
     }
 
     public void setColour(String colourName){
-        this.colour = colourName;
+        colour = colourName;
+        setChanged();
+    }
+    public void setBorderColour(String colourName){
+        borderColour = colourName;
         setChanged();
     }
 
@@ -86,6 +93,9 @@ public abstract class CelestialBody extends Observable implements Destructable, 
     public String getColour() {
         return colour;
     }
+    public String getBorderColour() {
+        return borderColour;
+    }
 
     public float getRadius() {
         return radius;
@@ -123,16 +133,16 @@ public abstract class CelestialBody extends Observable implements Destructable, 
         radius = w/2;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o == null || o.getClass() != getClass()) return false;
-        CelestialBody compare = (CelestialBody) o;
-        return name.equals(compare.name)
-                && radius.equals(compare.radius) && positionX.equals(compare.positionX)
-                && positionY.equals(compare.positionY) && velocityX.equals(compare.velocityX)
-                && velocityY.equals(compare.velocityY);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if(this == o) return true;
+//        if(o == null || o.getClass() != getClass()) return false;
+//        CelestialBody compare = (CelestialBody) o;
+//        return name.equals(compare.name)
+//                && radius.equals(compare.radius) && positionX.equals(compare.positionX)
+//                && positionY.equals(compare.positionY) && velocityX.equals(compare.velocityX)
+//                && velocityY.equals(compare.velocityY);
+//    }
 
     @Override
     public String getId(){
