@@ -42,6 +42,7 @@ public class CsvParser implements Parser {
         return items;
     }
 
+    //simplifies casting at a later stage
     private Object guessFieldType(String field){
         if(field.matches("-?\\d+.?,?\\d?\\d?")){
             return Float.parseFloat(field);
@@ -51,4 +52,5 @@ public class CsvParser implements Parser {
         }
         return field;
     }
+
 }
