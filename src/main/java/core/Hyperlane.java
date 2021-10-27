@@ -50,10 +50,6 @@ public class Hyperlane extends Observable implements Destructable, Cloneable {
         return new Hyperlane(planetA, planetB);
     }
 
-    public boolean containsPlanet(Planet planet){
-        return (planetA == planet || planetB == planet);
-    }
-
     public Planet getPlanetA(){
         return planetA;
     }

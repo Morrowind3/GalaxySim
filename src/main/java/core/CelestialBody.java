@@ -133,17 +133,6 @@ public abstract class CelestialBody extends Observable implements Destructable, 
         radius = w/2;
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if(this == o) return true;
-//        if(o == null || o.getClass() != getClass()) return false;
-//        CelestialBody compare = (CelestialBody) o;
-//        return name.equals(compare.name)
-//                && radius.equals(compare.radius) && positionX.equals(compare.positionX)
-//                && positionY.equals(compare.positionY) && velocityX.equals(compare.velocityX)
-//                && velocityY.equals(compare.velocityY);
-//    }
-
     @Override
     public String getId(){
         return id;

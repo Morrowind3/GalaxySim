@@ -20,5 +20,6 @@ public class ShowGridCommand implements Command {
     @Override
     public void handle(Event event) {
         controller.toggleGrid();
+        controller.rerender();
     }
 }

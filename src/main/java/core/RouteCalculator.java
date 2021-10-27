@@ -3,65 +3,52 @@ package core;
 import java.util.*;
 
 public class RouteCalculator {
-    private final Queue<Planet> queue = new LinkedList<>();
-    private final Set<Planet> visited = new HashSet<>();
-    private Set<Hyperlane> pathLanes = new HashSet<>();
 
-    private void clearData(){
-        queue.clear();
-        visited.clear();
-        pathLanes.clear();
-    }
+    public static List<Hyperlane> shortestRouteTo(Planet from, Planet to) {
+        if(from == null){ return null; }
 
-    public Set<Hyperlane> shortestRouteTo(Planet from, Planet to) {
-        clearData();
-        queue.add(from);
-        while(!queue.isEmpty()){
-            Planet planet = queue.poll();
-            traverseHyperlanes(planet, to, new HashSet<>());
-            visited.add(planet);
-        }
+        final Queue<List<Planet>> queue = new LinkedList<>();
+        final Set<Planet> visited = new HashSet<>();
 
-        return pathLanes;
-    }
+        List<Planet> pathToTarget = new ArrayList<>();
+        pathToTarget.add(from);
+        queue.add(pathToTarget);
 
-    //    public List<Hyperlane> cheapestRouteTo(Planet from, Planet to){
-//
-//
-//    }
+        while (! queue.isEmpty()) {
+            pathToTarget = queue.poll();
+            from = pathToTarget.get(pathToTarget.size()-1);
 
-    private void traverseHyperlanes(Planet from, Planet to, Set<Hyperlane> lanesVisited){
-        System.out.println("Visiting planet "  + from.getName());
-
-        if(from.equals(to)){
-            if(pathLanes.size() == 0 || pathLanes.size() > lanesVisited.size()){
-                pathLanes = lanesVisited;
+            if(from == to) {
+                return consolidateLanes(pathToTarget);
             }
-            return;
-
-        }
-        for(Hyperlane lane: from.getHyperlanes()){
-            if(lanesVisited.contains(lane)) continue;
-            Planet other = lane.getOppositePlanet(from);
-            if(!visited.contains(other) && !queue.contains(other)){
-                queue.add(other);
+            for(Planet nextPlanet : getNeighbors(from)){
+                if(!visited.contains(nextPlanet)) {
+                    visited.add(nextPlanet);
+                    List<Planet> pathToNextNode = new ArrayList<>(pathToTarget);
+                    pathToNextNode.add(nextPlanet);
+                    queue.add(pathToNextNode);
+                }
             }
-            lanesVisited.add(lane);
-            traverseHyperlanes(other, to, lanesVisited);
         }
+        return null;
     }
 
-    private void traverseHyperlanes(Planet planet){
-        for(Hyperlane lane: planet.getHyperlanes()){
-            Planet other = lane.getOppositePlanet(planet);
-            if(!visited.contains(other) && !queue.contains(other)){
-                queue.add(other);
-            }
-
-
+    private static List<Planet> getNeighbors(Planet planet) {
+        List<Planet> neighbours = new ArrayList<>();
+        for(Hyperlane lane : planet.getHyperlanes()){
+            neighbours.add(lane.getOppositePlanet(planet));
         }
+        return neighbours;
     }
 
+    private static List<Hyperlane> consolidateLanes(List<Planet> planetPath) {
+        List<Hyperlane> lanes = new ArrayList<>();
 
+        for (int i = 0; i < planetPath.size()-1; ++i) {
+            Hyperlane lane = planetPath.get(i).getHyperlaneTo(planetPath.get(i + 1));
+            lanes.add(lane);
+        }
+        return lanes;
+    };
 
 }

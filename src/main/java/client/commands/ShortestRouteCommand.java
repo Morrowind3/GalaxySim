@@ -19,7 +19,7 @@ public class ShortestRouteCommand implements Command {
     private final RouteCalculator routeCalculator = new RouteCalculator();
     private static final String ROUTE_COLOUR = "Red";
     private final String originalLaneColour;
-    private Set<Hyperlane> route;
+    private List<Hyperlane> route;
 
     public ShortestRouteCommand(SimulationController simulationController){
         this.simulationController = simulationController;
@@ -47,10 +47,10 @@ public class ShortestRouteCommand implements Command {
         for(CelestialBody celestialBody : celestialBodies){
            if(!(celestialBody instanceof Planet)) continue; //todo: typecheck
             Planet planet = (Planet) celestialBody;
-            if(isSmaller(planet, biggest)){
+            if(isBigger(planet, biggest)){
                 biggest = planet;
             } else
-            if(isSmaller(planet, secondBiggest)){
+            if(isBigger(planet, secondBiggest)){
                 secondBiggest = planet;
             }
         }
@@ -60,7 +60,7 @@ public class ShortestRouteCommand implements Command {
 
     }
 
-    private void markRoute(Set<Hyperlane> route){
+    private void markRoute(List<Hyperlane> route){
         final String laneColour = active ? ROUTE_COLOUR : originalLaneColour;
         final String planetOutline = active ? ROUTE_COLOUR : "Transparent";
 
@@ -69,9 +69,10 @@ public class ShortestRouteCommand implements Command {
             lane.getPlanetA().setBorderColour(planetOutline);
             lane.getPlanetB().setBorderColour(planetOutline);
         }
+        simulationController.rerender();
     }
 
-    private boolean isSmaller(Planet compareFrom, Planet compareTo){
-        return compareTo == null || compareFrom.getRadius() < compareTo.getRadius();
+    private boolean isBigger(Planet compareFrom, Planet compareTo){
+        return compareTo == null || compareFrom.getRadius() > compareTo.getRadius();
     }
 }

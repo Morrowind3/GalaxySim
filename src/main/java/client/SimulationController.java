@@ -83,6 +83,9 @@ public class SimulationController implements Mediator {
 
     public void updateSimulation(){
         simulation.updateSimulation();
+        rerender();
+    }
+    public void rerender(){
         rebuildComponentLists();
         simulationView.renderSimulation();
     }
