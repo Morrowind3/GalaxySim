@@ -1,5 +1,6 @@
 module GalaxySimulator.main {
     requires javafx.controls;
+    requires java.xml;
 
     opens core to javafx.graphics;
 

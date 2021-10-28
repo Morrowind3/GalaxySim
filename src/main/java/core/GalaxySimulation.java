@@ -43,16 +43,11 @@ public class GalaxySimulation implements MementoOriginator {
         collisionStrategy.checkCollisions();
     }
 
-    public void initializeCelestialBodies(String dataUrl, boolean fromLocalFile){
+    public void initializeCelestialBodies(String dataUrl){
         celestialBodies.clear();
         LoaderFactory loaderFactory = new LoaderFactory();
         String loaderType ;
-        if(fromLocalFile){
-            loaderType = "local";
-        } else {
-            loaderType = "api";
-        }
-        Loader loader = loaderFactory.create(loaderType);
+        Loader loader = loaderFactory.create(dataUrl);
         try{
             for(Map<String, ?> celestialBody : loader.loadSimData(dataUrl)){
                 builder.makeNewCelestialBodyFromMap(celestialBody);

@@ -37,7 +37,7 @@ public class SimulationController implements Mediator {
         if(simulation.isStarted()){
             return;
         }
-        simulation.initializeCelestialBodies(dataUrl, superController.isLocalSelected());
+        simulation.initializeCelestialBodies(dataUrl);
         rebuildComponentLists();
         superController.setMainContentCanvas(simulationView);
     }

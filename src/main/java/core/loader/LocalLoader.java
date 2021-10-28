@@ -17,7 +17,6 @@ public class LocalLoader implements Loader {
     @Override
     public List<Map<String, ?>> loadSimData(String dataUrl) throws InvalidDataException {
         Parser parser;
-
         File file = new File(dataUrl);
         if (file.isFile()) {
             String extension = file.getName();

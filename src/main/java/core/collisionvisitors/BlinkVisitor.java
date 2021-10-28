@@ -19,7 +19,7 @@ public class BlinkVisitor implements CollisionVisitor {
             String randomColourCode = String.format("#%06x", nextInt);
             celestialBody.setColour(randomColourCode);
             try {
-                Thread.sleep( 500 );
+                Thread.sleep( 300 );
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
