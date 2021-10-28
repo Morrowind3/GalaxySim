@@ -29,6 +29,7 @@ public class SimulationView extends Canvas implements Component {
     public SimulationView(int width, int height){
         setWidth(width);
         setHeight(height);
+        setFocusTraversable(true);
     }
 
     public void setGrid(GridComponent grid){
@@ -62,7 +63,6 @@ public class SimulationView extends Canvas implements Component {
         if(gridShown && grid != null){
             grid.draw(context);
         }
-
     }
 
     public void setCelestialBodyComponents(List<CelestialBodyComponent> celestialBodies){

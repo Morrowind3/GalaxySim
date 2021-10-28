@@ -22,7 +22,12 @@ public class SelectFileCommand implements  Command {
     {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        addAcceptedFormats(fileChooser);
+
+        //XML detection is broken on Windows, see https://bugs.openjdk.java.net/browse/JDK-8161668
+//        if(!System.getProperty("os.name").contains("win")){
+//            addAcceptedFormats(fileChooser);
+//        }
+
         File selectedFile = fileChooser.showOpenDialog(controller.getStage());
         if (selectedFile != null) {
             controller.setDataUrl(selectedFile.getAbsolutePath());
@@ -31,13 +36,14 @@ public class SelectFileCommand implements  Command {
 
     private void addAcceptedFormats(FileChooser chooser){
         for (SupportedFormats format : SupportedFormats.values()) {
-            String extensionNoCap = "*." + format.toString().toLowerCase();
-            String extensionAllCap = "*." + format.toString();
-            String extensionInitialCap = "*." + format.toString().charAt(0) + format.toString().toLowerCase().substring(1);
+            String extension = format.toString();
+            String extensionNoCap = "*." + extension.toLowerCase();
+            String extensionAllCap = "*." + extension.toUpperCase();
+            String extensionInitialCap = "*." + extensionAllCap.charAt(0) + extensionNoCap.substring(1);
 
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Data files", extensionNoCap));
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Data files", extensionAllCap));
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Data files", extensionInitialCap.toUpperCase()));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Data files", extensionInitialCap));
         }
     }
 
