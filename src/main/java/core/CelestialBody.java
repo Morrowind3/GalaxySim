@@ -16,14 +16,12 @@ public abstract class CelestialBody extends Observable implements Destructable, 
     protected Float velocityX, velocityY;
     protected Float radius;
     protected String colour;
-    protected String borderColour;
 
     protected List<CollisionTypes> collisionTypes;
 
     public CelestialBody(String name, String colour) {
         this.name = name;
         this.colour = colour;
-        this.borderColour = "Transparent";
         collisionTypes = new ArrayList<>();
 
         this.id = UUID.randomUUID().toString();
@@ -49,10 +47,6 @@ public abstract class CelestialBody extends Observable implements Destructable, 
 
     public void setColour(String colourName){
         colour = colourName;
-        setChanged();
-    }
-    public void setBorderColour(String colourName){
-        borderColour = colourName;
         setChanged();
     }
 
@@ -92,9 +86,6 @@ public abstract class CelestialBody extends Observable implements Destructable, 
 
     public String getColour() {
         return colour;
-    }
-    public String getBorderColour() {
-        return borderColour;
     }
 
     public float getRadius() {

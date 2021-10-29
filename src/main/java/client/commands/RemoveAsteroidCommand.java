@@ -23,14 +23,16 @@ public class RemoveAsteroidCommand implements Command {
 
     @Override
     public void handle(Event event) {
-        final Asteroid[] toRemove = new Asteroid[1];
+        Asteroid toRemove = null;
         for(CelestialBody celestialBody : mediator.getCelestialBodies()){
             if(celestialBody instanceof Asteroid)
             {
-                toRemove[0] = (Asteroid) celestialBody;
+                toRemove = (Asteroid) celestialBody;
                 break;
             }
         }
-        mediator.getCelestialBodies().remove(toRemove[0]);
+        if(toRemove != null){
+            mediator.removeFromGalaxy(toRemove);
+        }
     }
 }

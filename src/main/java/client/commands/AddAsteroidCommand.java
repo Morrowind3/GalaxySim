@@ -36,6 +36,6 @@ public class AddAsteroidCommand implements Command {
         float randomY = random.nextInt(maxY);
         asteroid.setPosition(randomX, randomY);
 
-        mediator.getCelestialBodies().add(asteroid);
+        mediator.addToGalaxy(asteroid);
     }
 }

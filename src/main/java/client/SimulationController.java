@@ -20,12 +20,14 @@ public class SimulationController implements Mediator {
     private MementoKeeper mementoKeeper = new MementoKeeper();
     private final SuperController superController;
     private final GalaxySimulation simulation = new GalaxySimulation();
+    final List<CelestialBodyComponent> celestialBodies = new ArrayList<>();
+    final List<HyperlaneComponent> hyperlanes = new ArrayList<>();
 
     public SimulationController(SuperController superController){
         this.superController = superController;
         simulationView = new SimulationView(SIMULATION_WIDTH, SIMULATION_HEIGHT);
         simulationView.setMediator(this);
-        simulation.setCollisionStrategy(new SimpleCollisionStrategy(SIMULATION_WIDTH, SIMULATION_HEIGHT, simulation.getCelestialBodies()));
+        simulation.setCollisionStrategy(new SimpleCollisionStrategy(SIMULATION_WIDTH, SIMULATION_HEIGHT, this));
     }
 
     public List<CelestialBody> getCelestialBodies(){
@@ -35,12 +37,16 @@ public class SimulationController implements Mediator {
     public void loadData(String dataUrl){
         mementoKeeper = new MementoKeeper();
         simulation.initializeCelestialBodies(dataUrl);
-        rebuildComponentLists();
+        buildComponentLists();
         superController.setMainContentCanvas(simulationView);
     }
 
     public void toggleGrid(){
         simulationView.toggleGrid();
+        if(simulation.getCollisionStrategy() instanceof QuadTreeCollisionStrategy){ //TODO: Typecheck
+            simulationView.setGrid(new GridComponent(((QuadTreeCollisionStrategy) simulation.getCollisionStrategy()).getQuadTree()));
+        }
+        rerender();
     }
 
     public void togglePlanetNames(){
@@ -55,10 +61,46 @@ public class SimulationController implements Mediator {
         return mementoKeeper;
     }
 
-    public void rebuildComponentLists(){
-        final List<CelestialBodyComponent> celestialBodies = new ArrayList<>();
-        final List<HyperlaneComponent> hyperlanes = new ArrayList<>();
+    public void setDrawablePrimaryEmphasis(CelestialBody celestialBody, Boolean emphasis){
+        for(CelestialBodyComponent component : celestialBodies){
+            if(component.modelAssociated(celestialBody)){
+                if(emphasis){
+                    component.setColourOverride("Red");
+                } else component.setColourOverride(null);
+                return;
+            }
+        }
+    }
+    public void setDrawablePrimaryEmphasis(Hyperlane lane, Boolean emphasis){
+        for(HyperlaneComponent component : hyperlanes){
+            if(component.modelAssociated(lane)){
+                if(emphasis){
+                    component.setColourOverride("Red");
+                } else component.setColourOverride(null);
+            }
+        }
+    }
 
+    public void setDrawableSecondaryEmphasis(CelestialBody celestialBody, Boolean emphasis){
+        for(CelestialBodyComponent component : celestialBodies){
+            if(component.modelAssociated(celestialBody)){
+                component.setGlowing(emphasis);
+                return;
+            }
+        }
+    }
+    public void setDrawableSecondaryEmphasis(Hyperlane lane, Boolean emphasis){
+        for(HyperlaneComponent component : hyperlanes){
+            if(component.modelAssociated(lane)){
+                component.setGlowing(emphasis);
+                return;
+            }
+        }
+    }
+
+    private void buildComponentLists(){
+        celestialBodies.clear();
+        hyperlanes.clear();
         for(CelestialBody model : simulation.getCelestialBodies()){
             CelestialBodyComponent component = new CelestialBodyComponent(model);
             model.addObserver(component);
@@ -72,13 +114,47 @@ public class SimulationController implements Mediator {
         }
         simulationView.setCelestialBodyComponents(celestialBodies);
         simulationView.setHyperlaneComponents(hyperlanes);
-        if(simulation.getCollisionStrategy() instanceof QuadTreeCollisionStrategy){ //TODO: Typecheck
-            simulationView.setGrid(new GridComponent(((QuadTreeCollisionStrategy)simulation.getCollisionStrategy()).getQuadTree()));
+    }
+
+    public void addToGalaxy(CelestialBody body){
+        CelestialBodyComponent component = new CelestialBodyComponent(body);
+        body.addObserver(component);
+        celestialBodies.add(component);
+        simulation.getCelestialBodies().add(body);
+        if(body instanceof Planet){ //todo: Icky typecheck, candidate for refactor
+            List<Hyperlane> lanes = ((Planet) body).getHyperlanes();
+            for(Hyperlane lane: lanes){
+                hyperlanes.add(new HyperlaneComponent(lane));
+            }
         }
     }
 
-    public String getName(){
-        return "SimulationController";
+    public void removeFromGalaxy(CelestialBody body){
+        body.prepareForDestruction();
+        CelestialBodyComponent celestialBodyToRemove = null;
+        final List<HyperlaneComponent> lanesToRemove = new ArrayList<>();
+
+        for(CelestialBodyComponent celestialBodyComponent : celestialBodies){
+            if(celestialBodyComponent.modelAssociated(body)){
+                celestialBodyToRemove = celestialBodyComponent;
+
+                if(body instanceof Planet){ //TODO: Typecheck
+                    for(Hyperlane lane : ((Planet) body).getHyperlanes()){
+                        for(HyperlaneComponent laneComponent : hyperlanes){
+                            if(laneComponent.modelAssociated(lane)){
+                                lanesToRemove.add(laneComponent);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for(HyperlaneComponent toRemove : lanesToRemove){
+            hyperlanes.remove(toRemove);
+        }
+        celestialBodies.remove(celestialBodyToRemove);
+        simulation.getCelestialBodies().remove(body);
     }
 
     public void updateSimulation(){
@@ -86,7 +162,6 @@ public class SimulationController implements Mediator {
         rerender();
     }
     public void rerender(){
-        rebuildComponentLists();
         simulationView.renderSimulation();
     }
 
@@ -105,5 +180,9 @@ public class SimulationController implements Mediator {
             default -> {
             }
         }
+    }
+
+    public String getName(){
+        return "SimulationController";
     }
 }

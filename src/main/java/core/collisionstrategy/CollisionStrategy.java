@@ -1,5 +1,6 @@
 package core.collisionstrategy;
 
+import client.SimulationController;
 import core.CelestialBody;
 import core.collisionvisitors.*;
 
@@ -9,38 +10,29 @@ import java.util.List;
 public abstract class CollisionStrategy implements Cloneable {
     protected final int width;
     protected final int height;
+    protected final SimulationController controller;
 
     private final GrowVisitor growVisitor = new GrowVisitor();
-    private DisappearVisitor disappearVisitor;
-    private ExplodeVisitor explodeVisitor;
+    private final DisappearVisitor disappearVisitor;
+    private final ExplodeVisitor explodeVisitor;
     private final BlinkVisitor blinkVisitor = new BlinkVisitor();
     private final BounceVisitor bounceVisitor = new BounceVisitor();
 
-
-    protected List<CelestialBody> galaxyList;
+    //used to track currently intersecting celestialBodies to avoid repeated collisions
     protected HashMap<Hitbox, Hitbox> intersections = new HashMap<>();
 
-    public CollisionStrategy(int width, int height, List<CelestialBody> galaxyList){
-        this.galaxyList = galaxyList;
+    public CollisionStrategy(int width, int height, SimulationController controller){
         this.width = width;
         this.height = height;
-        explodeVisitor = new ExplodeVisitor(galaxyList);
-        disappearVisitor = new DisappearVisitor(galaxyList);
-    }
-
-    public void setGalaxyList(List<CelestialBody> galaxyList){
-        this.galaxyList = galaxyList;
-        explodeVisitor = new ExplodeVisitor(galaxyList);
-        disappearVisitor = new DisappearVisitor(galaxyList);
+        this.controller = controller;
+        explodeVisitor = new ExplodeVisitor(controller);
+        disappearVisitor = new DisappearVisitor(controller);
     }
 
     abstract public void checkCollisions();
     abstract public CollisionStrategy clone();
 
     protected boolean areColliding(CelestialBody a, CelestialBody b){
-//        boolean sameHeight = a.getPositionY() <= b.getCenterY() + b.getRadius() && a.getPositionY() + a.getRadius() >= b.getPositionY();
-//        boolean sameBreadth = a.getPositionX() <= b.getCenterX() + b.getRadius() && a.getCenterX() + a.getRadius() >= b.getPositionX();
-
         boolean sameHeight = a.getCenterY() + a.getRadius() >= b.getPositionY() && a.getPositionY() <= b.getCenterY() + b.getRadius();
         boolean sameBreadth = a.getCenterX() + a.getRadius() >= b.getPositionX() && a.getPositionX() <= b.getCenterX() + b.getRadius();
 

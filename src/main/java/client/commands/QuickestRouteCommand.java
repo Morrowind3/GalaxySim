@@ -1,26 +1,23 @@
 package client.commands;
 
-import client.Mediator;
 import client.SimulationController;
-import core.CelestialBody;
 import core.Hyperlane;
-import core.Planet;
 import core.RouteCalculator;
 import javafx.event.Event;
 
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
-public class ShortestRouteCommand extends RouteCommand implements Command{
-    public ShortestRouteCommand(SimulationController simulationController){
+public class QuickestRouteCommand extends RouteCommand implements Command {
+
+    public QuickestRouteCommand(SimulationController simulationController) {
         super(simulationController);
     }
 
     @Override
     public CommandNames getCommandName() {
-        return CommandNames.SHORTEST_ROUTE;
+        return CommandNames.QUICKEST_ROUTE;
     }
 
     @Override
@@ -32,7 +29,7 @@ public class ShortestRouteCommand extends RouteCommand implements Command{
         }
 
         setPointsBiggest();
-        route = RouteCalculator.shortestRouteTo(pointA, pointB);
+        route = RouteCalculator.quickestRouteTo(pointA, pointB);
 
         markRoute();
     }
@@ -40,9 +37,9 @@ public class ShortestRouteCommand extends RouteCommand implements Command{
     @Override
     public void markRoute(){
         for(Hyperlane lane : route){
-            simulationController.setDrawablePrimaryEmphasis(lane, active);
-            simulationController.setDrawablePrimaryEmphasis(lane.getPlanetB(), active);
-            simulationController.setDrawablePrimaryEmphasis(lane.getPlanetA(),active);
+            simulationController.setDrawableSecondaryEmphasis(lane, active);
+            simulationController.setDrawableSecondaryEmphasis(lane.getPlanetB(), active);
+            simulationController.setDrawableSecondaryEmphasis(lane.getPlanetA(),active);
         }
         simulationController.rerender();
     }

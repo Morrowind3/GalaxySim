@@ -38,7 +38,6 @@ public class KeyConfigBarController implements Mediator {
         Optional<String> result = inputDialogue.showAndWait();
         result.ifPresent(e -> {
             pressed.setText(commandName.getName() + "\n(" + key[0].getName() + ")");
-            inputHandler.unregisterKeyCommand(key[0]);
             inputHandler.registerKeyCommand(key[0], commandName);
         });
     }

@@ -1,20 +1,21 @@
 package core.collisionvisitors;
 
+import client.SimulationController;
 import core.CelestialBody;
 import core.CollisionTypes;
 
 import java.util.List;
 
 public class DisappearVisitor implements CollisionVisitor {
-    private List<CelestialBody> simulationList;
+    private final SimulationController controller;
 
-    public DisappearVisitor(List<CelestialBody> list){
-        simulationList = list;
+    public DisappearVisitor(SimulationController controller){
+        this.controller = controller;
     }
 
     @Override
     public void visitCelestialBody(CelestialBody celestialBody) {
-        simulationList.remove(celestialBody);
+        controller.removeFromGalaxy(celestialBody);
     }
 
     @Override

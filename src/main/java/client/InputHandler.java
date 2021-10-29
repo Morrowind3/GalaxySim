@@ -25,14 +25,17 @@ public class InputHandler {
 
     public void registerKeyCommand(KeyCode key, CommandNames commandName){
         KeyCode oldKey = null;
+        Command toSet = null;
         for(Map.Entry<KeyCode, Command> entry : keyCommands.entrySet()) {
             Command command = entry.getValue();
 
             if(command.getCommandName() == commandName){
                 oldKey = entry.getKey();
-                keyCommands.put(key, command);
+                toSet = command;
+                break;
             }
         }
+        keyCommands.put(key, toSet);
         keyCommands.remove(oldKey);
 
         refreshKeyListeners();
@@ -42,10 +45,6 @@ public class InputHandler {
         return keyCommands;
     }
 
-    public void unregisterKeyCommand(KeyCode key){
-        keyCommands.remove(key);
-        refreshKeyListeners();
-    };
     private void refreshKeyListeners(){
         scene.setOnKeyPressed(e -> {
             for(Map.Entry<KeyCode, Command> entry : keyCommands.entrySet()) {
@@ -53,6 +52,7 @@ public class InputHandler {
                 EventHandler<Event> command = entry.getValue();
                 if (e.getCode() == keyPressed) {
                     command.handle(e);
+                    return;
                 }
             }
         });

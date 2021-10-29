@@ -8,7 +8,6 @@ import java.util.Observable;
 public class Hyperlane extends Observable implements Destructable, Cloneable {
     private Planet planetA;
     private Planet planetB;
-    private String colour = "Blue";
 
     public Hyperlane(Planet planetA, Planet planetB){
         this.planetA = planetA;
@@ -61,15 +60,6 @@ public class Hyperlane extends Observable implements Destructable, Cloneable {
         if(planetA == thisPlanet) return planetB;
         if(planetB == thisPlanet) return planetA;
         return null;
-    }
-
-    public String getColour(){
-        return colour;
-    }
-
-    public void setColour(String colour){
-        this.colour = colour;
-        setChanged();
     }
 
     @Override
