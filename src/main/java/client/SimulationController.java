@@ -34,7 +34,7 @@ public class SimulationController implements Mediator {
 
     public void loadData(String dataUrl){
         mementoKeeper = new MementoKeeper();
-        simulation.initializeCelestialBodies(dataUrl, superController.isLocalSelected());
+        simulation.initializeCelestialBodies(dataUrl);
         rebuildComponentLists();
         superController.setMainContentCanvas(simulationView);
     }
