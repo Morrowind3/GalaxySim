@@ -5,6 +5,7 @@ import core.collisionstrategy.NullCollisionStrategy;
 import core.exceptions.InvalidDataException;
 import core.loader.Loader;
 import core.loader.LoaderFactory;
+import java.util.Observable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +16,11 @@ public class GalaxySimulation implements MementoOriginator {
     private List<CelestialBody> celestialBodies = new ArrayList<>();
     private final CelestialBodyBuilder builder = new CelestialBodyBuilder();
     private CollisionStrategy collisionStrategy;
-    private boolean started = false;
 
     public GalaxySimulation(){
         collisionStrategy = new NullCollisionStrategy(0,0,null);
     }
 
-    public boolean isStarted(){
-        return started;
-    }
 
     public void setCollisionStrategy(CollisionStrategy strategy){
         this.collisionStrategy = strategy;
@@ -39,14 +36,12 @@ public class GalaxySimulation implements MementoOriginator {
         for(CelestialBody model : celestialBodies){
             model.move();
         }
-        collisionStrategy.setGalaxyList(celestialBodies);
         collisionStrategy.checkCollisions();
     }
 
     public void initializeCelestialBodies(String dataUrl){
         celestialBodies.clear();
         LoaderFactory loaderFactory = new LoaderFactory();
-        String loaderType ;
         Loader loader = loaderFactory.create(dataUrl);
         try{
             for(Map<String, ?> celestialBody : loader.loadSimData(dataUrl)){
@@ -59,7 +54,6 @@ public class GalaxySimulation implements MementoOriginator {
             System.out.println(e.getMessage());
             return;
         }
-        started = true;
     }
 
     protected void setGalaxyList(List<CelestialBody> list){
@@ -74,7 +68,6 @@ public class GalaxySimulation implements MementoOriginator {
         }
 
         CollisionStrategy strategyCopy = collisionStrategy.clone();
-        strategyCopy.setGalaxyList(galaxyListDeepCopy);
 
         keeper.push(new GalaxyMemento(strategyCopy, galaxyListDeepCopy, this));
 

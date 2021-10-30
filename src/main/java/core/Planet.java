@@ -33,6 +33,15 @@ public class Planet extends CelestialBody {
         super.prepareForDestruction();
     }
 
+    public Hyperlane getHyperlaneTo(Planet other){
+        for(Hyperlane lane : hyperlanes){
+            if(lane.getOppositePlanet(this) == other){
+                return lane;
+            }
+        }
+        return null;
+    }
+
     public void addHyperlane(Hyperlane hyperlane) {
         if (hyperlanes.contains(hyperlane)) return;
         hyperlanes.add(hyperlane);

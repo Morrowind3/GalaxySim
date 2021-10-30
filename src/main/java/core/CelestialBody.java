@@ -16,6 +16,7 @@ public abstract class CelestialBody extends Observable implements Destructable, 
     protected Float velocityX, velocityY;
     protected Float radius;
     protected String colour;
+
     protected List<CollisionTypes> collisionTypes;
 
     public CelestialBody(String name, String colour) {
@@ -45,7 +46,7 @@ public abstract class CelestialBody extends Observable implements Destructable, 
     }
 
     public void setColour(String colourName){
-        this.colour = colourName;
+        colour = colourName;
         setChanged();
     }
 

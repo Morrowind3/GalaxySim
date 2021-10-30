@@ -1,5 +1,6 @@
 package core.collisionstrategy;
 
+import client.SimulationController;
 import core.CelestialBody;
 import java.util.List;
 
@@ -10,19 +11,13 @@ public class QuadTreeCollisionStrategy extends CollisionStrategy {
     QuadTree quadTree;
     QuadRectangle rootRectangle;
 
-    public QuadTreeCollisionStrategy(int width, int height, List<CelestialBody> galaxyList) {
-        super(width, height, galaxyList);
+    public QuadTreeCollisionStrategy(int width, int height, SimulationController controller) {
+        super(width, height, controller);
         rootRectangle = new QuadRectangle(0, 0, width, height);
         quadTree = new QuadTree(rootRectangle);
-        setGalaxyList(galaxyList);
     }
 
-    //TODO: Insertion isnt going right
-    @Override
-    public void setGalaxyList(List<CelestialBody> galaxyList){
-        this.galaxyList = galaxyList;
-        quadTree.rebuildTree(galaxyList);
-    }
+
 
     public QuadTree getQuadTree(){
         return quadTree;
@@ -30,9 +25,9 @@ public class QuadTreeCollisionStrategy extends CollisionStrategy {
 
     @Override
     public void checkCollisions() {
-        quadTree.rebuildTree(galaxyList);
+        quadTree.rebuildTree(controller.getCelestialBodies());
 
-        for(Hitbox entity : galaxyList){
+        for(Hitbox entity : controller.getCelestialBodies()){
             checkOutOfBoundsCollision((CelestialBody) entity);
         }
 
@@ -63,7 +58,7 @@ public class QuadTreeCollisionStrategy extends CollisionStrategy {
 
     @Override
     public CollisionStrategy clone() {
-        QuadTreeCollisionStrategy clone = new QuadTreeCollisionStrategy(width, height, galaxyList);
+        QuadTreeCollisionStrategy clone = new QuadTreeCollisionStrategy(width, height, controller);
         clone.quadTree = quadTree.clone();
         clone.intersections = intersections;
         return clone;

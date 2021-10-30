@@ -18,5 +18,6 @@ public class ShowPlanetNamesCommand implements Command {
     @Override
     public void handle(Event event) {
         controller.togglePlanetNames();
+        controller.rerender();
     }
 }

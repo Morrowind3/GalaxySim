@@ -20,17 +20,19 @@ import java.util.concurrent.TimeUnit;
 
 public class SuperController implements Mediator {
     private static final int WINDOW_WIDTH = 810;
-    private static final int WINDOW_HEIGHT = 760;
+    private static final int WINDOW_HEIGHT = 780;
     private static final String WINDOW_TITLE = "Flat Galaxy Simulator 2021";
     private static final int MEMENTO_INTERVAL_SEC = 5;
 
     private Launcher launcher;
-    private final SimulationController simulationController;
+    private SimulationController simulationController;
     private FileSelectorController fileSelectorController;
     private ScheduledFuture mementoScheduledFuture;
     private final AnimationTimerPlus applicationLoop;
     private final ScheduledExecutorService executor;
     private final Runnable mementoTimer;
+    private KeyConfigBar keyConfigBar;
+    private InputHandler inputHandler;
 
     private boolean saveState = false;
 
@@ -40,7 +42,6 @@ public class SuperController implements Mediator {
         executor = Executors.newSingleThreadScheduledExecutor();
         startMementoTimer(false);
 
-        simulationController = new SimulationController(this);
 
         applicationLoop = new AnimationTimerPlus(true) {
             private int saveStateCounter = 0;
@@ -72,11 +73,9 @@ public class SuperController implements Mediator {
         }
     }
 
-    public boolean isLocalSelected(){
-        return true;
-    }
-
     public void loadSimulation(String dataUrl){
+        simulationController = new SimulationController(this);
+        setCommands();
         simulationController.loadData(dataUrl);
         simulationController.updateSimulation();
         applicationLoop.ready();
@@ -96,25 +95,36 @@ public class SuperController implements Mediator {
         fileSelector.setMediator(fileSelectorController);
 
         launcher = new Launcher();
-        KeyConfigBar keyConfigBar = new KeyConfigBar();
+        keyConfigBar = new KeyConfigBar();
         launcher.Show(primaryStage, keyConfigBar, fileSelector);
+        inputHandler = new InputHandler(launcher.getScene());
+        setCommands();
+        keyConfigBar.formCommandButtons(inputHandler.getKeyCommands());
 
-        InputHandler inputHandler = new InputHandler(launcher.getScene());
+
+        KeyConfigBarController keyConfigBarController = new KeyConfigBarController(inputHandler, this);
+        keyConfigBarController.registerComponent(keyConfigBar);
+    }
+
+    private void setCommands(){
         inputHandler.registerKeyCommand(KeyCode.LEFT, new SpeedDownCommand(applicationLoop));
-        inputHandler.registerKeyCommand(KeyCode.BACK_SPACE, new RewindCommand(simulationController.getMementoKeeper()));
+        inputHandler.registerKeyCommand(KeyCode.BACK_SPACE, new RewindCommand(simulationController));
         inputHandler.registerKeyCommand(KeyCode.RIGHT, new SpeedUpCommand(applicationLoop));
         inputHandler.registerKeyCommand(KeyCode.SPACE, new StartPauseCommand(applicationLoop));
         inputHandler.registerKeyCommand(KeyCode.G, new ShowGridCommand(simulationController));
         inputHandler.registerKeyCommand(KeyCode.L, new ShowPlanetNamesCommand(simulationController));
+        inputHandler.registerKeyCommand(KeyCode.ADD, new AddAsteroidCommand(simulationController, SimulationController.SIMULATION_WIDTH,  SimulationController.SIMULATION_HEIGHT ));
+        inputHandler.registerKeyCommand(KeyCode.SUBTRACT, new RemoveAsteroidCommand(simulationController));
 
+        final ShortestRouteCommand shortestRouteCommand = new ShortestRouteCommand(simulationController);
+        final QuickestRouteCommand quickestRouteCommand =  new QuickestRouteCommand(simulationController);
+        inputHandler.registerKeyCommand(KeyCode.S, shortestRouteCommand);
+        inputHandler.registerKeyCommand(KeyCode.Q, quickestRouteCommand);
 
         SwitchCollisionAlgorithmCommand collisionCommand = new SwitchCollisionAlgorithmCommand(simulationController);
-        collisionCommand.addAlgorithmChoice(new SimpleCollisionStrategy(SimulationController.SIMULATION_WIDTH, SimulationController.SIMULATION_HEIGHT, simulationController.getCelestialBodies()));
-        collisionCommand.addAlgorithmChoice(new QuadTreeCollisionStrategy(SimulationController.SIMULATION_WIDTH, SimulationController.SIMULATION_HEIGHT, simulationController.getCelestialBodies()));
+        collisionCommand.addAlgorithmChoice(new SimpleCollisionStrategy(SimulationController.SIMULATION_WIDTH, SimulationController.SIMULATION_HEIGHT, simulationController));
+        collisionCommand.addAlgorithmChoice(new QuadTreeCollisionStrategy(SimulationController.SIMULATION_WIDTH, SimulationController.SIMULATION_HEIGHT, simulationController));
         inputHandler.registerKeyCommand(KeyCode.C, collisionCommand);
-
-        KeyConfigBarController keyConfigBarController = new KeyConfigBarController(inputHandler, this);
-        keyConfigBarController.registerComponent(keyConfigBar);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package core.collisionvisitors;
 
+import client.SimulationController;
 import core.Asteroid;
 import core.CelestialBody;
 import core.CelestialBodyBuilder;
@@ -9,13 +10,12 @@ import java.util.List;
 import java.util.Random;
 
 public class ExplodeVisitor implements CollisionVisitor {
-    private final List<CelestialBody> simulationList;
-
+    private final SimulationController controller;
     private final Random random = new Random();
     private final CelestialBodyBuilder builder = new CelestialBodyBuilder();
 
-    public ExplodeVisitor(List<CelestialBody> list){
-        simulationList = list;
+    public ExplodeVisitor(SimulationController controller){
+        this.controller = controller;
     }
 
     @Override
@@ -24,19 +24,12 @@ public class ExplodeVisitor implements CollisionVisitor {
             builder.makeNewGenericAsteroid();
             Asteroid asteroid = (Asteroid) builder.returnCelestialBody();
             asteroid.setPosition(celestialBody.getPositionX(), celestialBody.getPositionY());
-            asteroid.setVelocity(1f + random.nextFloat(), 1f + random.nextFloat());
-            if(random.nextFloat() < 0.5f){
-                asteroid.invertVelocityX();
-            }
-            if(random.nextFloat() < 0.5f){
-                asteroid.invertVelocityY();
-            }
-            float size = celestialBody.getRadius() / (2f + random.nextFloat()) + random.nextFloat();
+
+            float size = celestialBody.getRadius() / (2.5f + random.nextFloat()) + random.nextFloat();
             asteroid.setRadius(size);
-            simulationList.add(asteroid);
+            controller.addToGalaxy(asteroid);
         }
-        celestialBody.prepareForDestruction();
-        simulationList.remove(celestialBody);
+        controller.removeFromGalaxy(celestialBody);
     }
 
     @Override

@@ -6,12 +6,12 @@ import core.collisionstrategy.QuadRectangle;
 import core.collisionstrategy.QuadTree;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class GridComponent implements Drawable, Component{
 
     private SimulationController controller;
     private QuadTree tree;
+    private Color colour = Color.SADDLEBROWN;
 
     public GridComponent(QuadTree tree){
         this.tree = tree;
@@ -29,7 +29,7 @@ public class GridComponent implements Drawable, Component{
 
     @Override
     public void draw(GraphicsContext context) {
-        context.setStroke(Color.SADDLEBROWN);
+        context.setStroke(colour);
         context.setFill(Color.TRANSPARENT);
         context.setLineWidth(3);
         for(QuadRectangle cell : tree.getAllQuads()){
@@ -37,5 +37,14 @@ public class GridComponent implements Drawable, Component{
 
             context.strokeRect(cell.getPositionX(), cell.getPositionY(), cell.getWidth(), cell.getHeight());
         }
+    }
+    @Override
+    public boolean modelAssociated(Object model){
+        return(model == this.tree);
+    }
+
+    @Override
+    public void setColourOverride(String colour) {
+        this.colour = colour == null ? Color.SADDLEBROWN : Color.web(colour);
     }
 }

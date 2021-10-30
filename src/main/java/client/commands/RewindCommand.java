@@ -1,19 +1,21 @@
 package client.commands;
 
+import client.SimulationController;
 import core.MementoKeeper;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
 public class RewindCommand implements Command{
-    private final MementoKeeper mementoKeeper;
+    private final SimulationController simulationController;
 
-    public RewindCommand(MementoKeeper mementoKeeper){
-        this.mementoKeeper = mementoKeeper;
+    public RewindCommand(SimulationController simulationController){
+        this.simulationController = simulationController;
     }
 
     @Override
     public void handle(Event event) {
-        mementoKeeper.undo();
+        simulationController.getMementoKeeper().undo();
+        simulationController.buildComponentLists();
     }
 
     @Override

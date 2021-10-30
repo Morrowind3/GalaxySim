@@ -9,8 +9,9 @@ import java.util.Random;
 public class CelestialBodyBuilder {
 
     private CelestialBody celestialBody;
-    private String type;
     private final Random random = new Random();
+
+    private String type;
 
     public void makeNewCelestialBodyFromMap(Map<String, ?> celestialBodyData) throws InvalidDataException {
         type = (String) celestialBodyData.get("type");
@@ -39,9 +40,15 @@ public class CelestialBodyBuilder {
     }
 
     public void makeNewGenericAsteroid(){
-//        String name = "Asteroid-" + generateRandomId();
         celestialBody = new Asteroid(null, "Black");
-        celestialBody.setRadius(5);
+        celestialBody.setRadius(3 + random.nextInt(6));
+        celestialBody.setVelocity(1f + random.nextFloat(), 1f + random.nextFloat());
+        if(Math.random() < 0.5){
+            celestialBody.invertVelocityX();
+        }
+        if(Math.random() < 0.5){
+            celestialBody.invertVelocityY();
+        }
         celestialBody.addCollisionType(CollisionTypes.BOUNCE);
     }
 
@@ -61,16 +68,4 @@ public class CelestialBodyBuilder {
         return celestialBody;
     }
 
-    private String generateRandomId(){
-            int leftLimit = 48; // numeral '0'
-            int rightLimit = 122; // letter 'z'
-            int targetStringLength = 4;
-
-            String generatedString = random.ints(leftLimit, rightLimit + 1)
-                    .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                    .limit(targetStringLength)
-                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                    .toString();
-            return generatedString;
-        }
 }

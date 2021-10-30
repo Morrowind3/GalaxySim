@@ -1,5 +1,6 @@
 package core.collisionstrategy;
 
+import client.SimulationController;
 import core.CelestialBody;
 
 import java.util.HashMap;
@@ -10,25 +11,24 @@ import java.util.stream.Collectors;
 //TODO: Implement hitbox interface here as well.
 
 public class SimpleCollisionStrategy extends CollisionStrategy implements Cloneable {
-    //used to track currently intersecting celestialBodies to avoid repeated collisions
 
-    public SimpleCollisionStrategy(int width, int height, List<CelestialBody> galaxyList) {
-        super(width, height, galaxyList);
+    public SimpleCollisionStrategy(int width, int height, SimulationController controller) {
+        super(width, height, controller);
     }
 
     @Override
     public CollisionStrategy clone(){
-        return new SimpleCollisionStrategy(width, height, galaxyList);
+        return new SimpleCollisionStrategy(width, height, controller);
     }
 
 
     @Override
     public void checkCollisions() {
-        for(int a = 0; a < galaxyList.size(); ++a){
-            checkOutOfBoundsCollision(galaxyList.get(a));
-            for(int b = a+1; b < galaxyList.size(); ++b){
-                CelestialBody first = galaxyList.get(a);
-                CelestialBody second = galaxyList.get(b);
+        for(int a = 0; a < controller.getCelestialBodies().size(); ++a){
+            checkOutOfBoundsCollision(controller.getCelestialBodies().get(a));
+            for(int b = a+1; b < controller.getCelestialBodies().size(); ++b){
+                CelestialBody first = controller.getCelestialBodies().get(a);
+                CelestialBody second = controller.getCelestialBodies().get(b);
 
                 boolean colliding = areColliding(first, second);
 
