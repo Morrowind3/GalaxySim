@@ -98,7 +98,7 @@ public class SimulationController implements Mediator {
         }
     }
 
-    private void buildComponentLists(){
+    public void buildComponentLists(){
         celestialBodies.clear();
         hyperlanes.clear();
         for(CelestialBody model : simulation.getCelestialBodies()){

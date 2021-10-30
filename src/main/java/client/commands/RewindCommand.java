@@ -15,6 +15,7 @@ public class RewindCommand implements Command{
     @Override
     public void handle(Event event) {
         simulationController.getMementoKeeper().undo();
+        simulationController.buildComponentLists();
     }
 
     @Override
