@@ -75,7 +75,6 @@ public class SuperController implements Mediator {
         setCommands();
         simulationController.loadData(dataUrl);
         simulationController.updateSimulation();
-        applicationLoop.start();
     }
 
     public void setMainContentCanvas(Canvas mainContent){
