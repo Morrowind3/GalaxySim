@@ -11,16 +11,13 @@ public class CelestialBodyBuilder {
     private CelestialBody celestialBody;
     private final Random random = new Random();
 
-    private String type;
-
     public void makeNewCelestialBodyFromMap(Map<String, ?> celestialBodyData) throws InvalidDataException {
-        type = (String) celestialBodyData.get("type");
-
-        switch (type.toLowerCase()) {
-            case "asteroid" -> celestialBody = new Asteroid((String) celestialBodyData.get("name"), (String) celestialBodyData.get("color"));
-            case "planet" -> celestialBody = new Planet((String) celestialBodyData.get("name"), (String) celestialBodyData.get("color"));
-            default -> throw new InvalidDataException();
+        switch (((String) celestialBodyData.get("type")).toLowerCase()){
+            case "planet" -> celestialBody = new CelestialBody((String) celestialBodyData.get("name"), (String) celestialBodyData.get("color"), CelestialBodyTypes.PLANET);
+            case "asteroid" ->  celestialBody = new CelestialBody((String) celestialBodyData.get("name"), (String) celestialBodyData.get("color"), CelestialBodyTypes.ASTEROID);
+            default ->  celestialBody = new CelestialBody((String) celestialBodyData.get("name"), (String) celestialBodyData.get("color"), CelestialBodyTypes.UNKNOWN);
         }
+
         float posX = (float) celestialBodyData.get("x");
         float posY = (float) celestialBodyData.get("y");
         float velX = (float) celestialBodyData.get("vx");
@@ -40,7 +37,7 @@ public class CelestialBodyBuilder {
     }
 
     public void makeNewGenericAsteroid(){
-        celestialBody = new Asteroid(null, "Black");
+        celestialBody = new CelestialBody(null, "Black", CelestialBodyTypes.ASTEROID);
         celestialBody.setRadius(3 + random.nextInt(6));
         celestialBody.setVelocity(1f + random.nextFloat(), 1f + random.nextFloat());
         if(Math.random() < 0.5){
@@ -53,12 +50,10 @@ public class CelestialBodyBuilder {
     }
 
     public void formHyperlanes(String[] neighbourNames, List<CelestialBody> existing){
-        if(!type.equalsIgnoreCase("planet")) return;
-
         for(String neighbourName: neighbourNames){
             for(CelestialBody candidate : existing){
-                if(candidate instanceof Planet && candidate.getName().equals(neighbourName)) { //TODO: Refactoring candidate. Icky type checking.
-                    new Hyperlane((Planet) candidate, (Planet) celestialBody);
+                if(candidate.getName().equals(neighbourName)) {
+                    new Hyperlane(candidate,  celestialBody);
                 }
             }
         }

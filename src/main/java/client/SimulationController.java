@@ -43,7 +43,7 @@ public class SimulationController implements Mediator {
 
     public void toggleGrid(){
         simulationView.toggleGrid();
-        if(simulation.getCollisionStrategy() instanceof QuadTreeCollisionStrategy){ //TODO: Typecheck
+        if(simulation.getCollisionStrategy() instanceof QuadTreeCollisionStrategy){
             simulationView.setGrid(new GridComponent(((QuadTreeCollisionStrategy) simulation.getCollisionStrategy()).getQuadTree()));
         }
         rerender();
@@ -105,11 +105,9 @@ public class SimulationController implements Mediator {
             CelestialBodyComponent component = new CelestialBodyComponent(model);
             model.addObserver(component);
             celestialBodies.add(component);
-            if(model instanceof Planet){ //todo: Icky typecheck, candidate for refactor
-                List<Hyperlane> lanes = ((Planet) model).getHyperlanes();
+                List<Hyperlane> lanes = model.getHyperlanes();
                 for(Hyperlane lane: lanes){
                     hyperlanes.add(new HyperlaneComponent(lane));
-                }
             }
         }
         simulationView.setCelestialBodyComponents(celestialBodies);
@@ -121,11 +119,9 @@ public class SimulationController implements Mediator {
         body.addObserver(component);
         celestialBodies.add(component);
         simulation.getCelestialBodies().add(body);
-        if(body instanceof Planet){ //todo: Icky typecheck, candidate for refactor
-            List<Hyperlane> lanes = ((Planet) body).getHyperlanes();
+            List<Hyperlane> lanes = body.getHyperlanes();
             for(Hyperlane lane: lanes){
                 hyperlanes.add(new HyperlaneComponent(lane));
-            }
         }
     }
 
@@ -137,15 +133,13 @@ public class SimulationController implements Mediator {
         for(CelestialBodyComponent celestialBodyComponent : celestialBodies){
             if(celestialBodyComponent.modelAssociated(body)){
                 celestialBodyToRemove = celestialBodyComponent;
-
-                if(body instanceof Planet){ //TODO: Typecheck
-                    for(Hyperlane lane : ((Planet) body).getHyperlanes()){
+                    for(Hyperlane lane : body.getHyperlanes()){
                         for(HyperlaneComponent laneComponent : hyperlanes){
                             if(laneComponent.modelAssociated(lane)){
                                 lanesToRemove.add(laneComponent);
                             }
                         }
-                    }
+                    break;
                 }
             }
         }

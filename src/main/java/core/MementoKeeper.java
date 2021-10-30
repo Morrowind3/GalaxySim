@@ -10,17 +10,15 @@ public class MementoKeeper {
         return history.size();
     }
     public void push(Memento memento) {
-
-        System.out.println("Saved memento #" + history.size());
         history.add(memento);
+        System.out.println("Saved memento #" + history.size());
     }
 
     public void undo() {
         try{
-            Memento menento = history.pop();
-            menento.restore();
+            Memento memento = history.pop();
+            memento.restore();
         } catch (EmptyStackException ignored){
         }
     }
-
 }

@@ -15,7 +15,6 @@ import java.util.Observer;
 
 
 public class CelestialBodyComponent implements Component, Drawable, Observer {
-    private DropShadow glow;
     private SimulationController controller;
     private CelestialBody model;
     private boolean isGlowing;
@@ -31,7 +30,7 @@ public class CelestialBodyComponent implements Component, Drawable, Observer {
         float diameter = model.getRadius() * 2;
 
         if(isGlowing){
-            glow = new DropShadow(BlurType.ONE_PASS_BOX, Color.BLACK, model.getRadius(), 0.6, 0, 0);
+            DropShadow glow = new DropShadow(BlurType.ONE_PASS_BOX, Color.BLACK, model.getRadius(), 0.6, 0, 0);
             context.setEffect(glow);
         }
         context.fillOval(model.getPositionX(), model.getPositionY(), diameter, diameter);

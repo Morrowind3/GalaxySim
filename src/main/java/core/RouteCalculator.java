@@ -4,18 +4,18 @@ import java.util.*;
 
 
 public class RouteCalculator {
-    public static List<Hyperlane> quickestRouteTo(Planet from, Planet to) {
+    public static List<Hyperlane> quickestRouteTo(CelestialBody from, CelestialBody to) {
         if(from == null || from == to){ return null; }
-        final Set<Planet> settledNodes =  new HashSet<>();
-        final Set<Planet> unSettledNodes =  new HashSet<>();
-        final Map<Planet, Planet> predecessors = new HashMap<>();
-        final Map<Planet, Float> distance = new HashMap<>();
+        final Set<CelestialBody> settledNodes =  new HashSet<>();
+        final Set<CelestialBody> unSettledNodes =  new HashSet<>();
+        final Map<CelestialBody, CelestialBody> predecessors = new HashMap<>();
+        final Map<CelestialBody, Float> distance = new HashMap<>();
         distance.put(from, 0f);
         unSettledNodes.add(from);
 
         while (unSettledNodes.size() > 0) {
-            Planet minimum = null;
-            for (Planet planet : unSettledNodes) {
+            CelestialBody minimum = null;
+            for (CelestialBody planet : unSettledNodes) {
                 if (minimum == null) {
                     minimum = planet;
                 } else {
@@ -29,9 +29,8 @@ public class RouteCalculator {
             findMinimalDistances(minimum, predecessors, unSettledNodes, distance);
         }
 
-        List<Planet> path = new LinkedList<>();
-
-        Planet step = to;
+        final List<CelestialBody> path = new LinkedList<>();
+        CelestialBody step = to;
         if (predecessors.get(step) == null) {
             return null;
         }
@@ -44,9 +43,9 @@ public class RouteCalculator {
         return consolidateLanes(path);
     }
 
-    private static void findMinimalDistances(Planet planet, Map<Planet, Planet> predecessors, Set<Planet> unSettledNodes, Map<Planet, Float> distance) {
+    private static void findMinimalDistances(CelestialBody planet, Map<CelestialBody, CelestialBody> predecessors, Set<CelestialBody> unSettledNodes, Map<CelestialBody, Float> distance) {
         for (Hyperlane lane : planet.getHyperlanes()) {
-            Planet adjacentPlanet = lane.getOppositePlanet(planet);
+            CelestialBody adjacentPlanet = lane.getOppositePlanet(planet);
             float newShortestDistance = getShortestDistance(planet, distance) + lane.getLength();
             if (getShortestDistance(adjacentPlanet, distance) > newShortestDistance) {
                 distance.put(adjacentPlanet, newShortestDistance);
@@ -56,7 +55,7 @@ public class RouteCalculator {
         }
     }
 
-    private static float getShortestDistance(Planet destination, Map<Planet, Float> distance) {
+    private static float getShortestDistance(CelestialBody destination, Map<CelestialBody, Float> distance) {
             Float dis = distance.get(destination);
 
             if (dis == null) {
@@ -66,13 +65,13 @@ public class RouteCalculator {
             }
         }
 
-    public static List<Hyperlane> shortestRouteTo(Planet from, Planet to) {
+    public static List<Hyperlane> shortestRouteTo(CelestialBody from, CelestialBody to) {
         if(from == null){ return null; }
 
-        final Queue<List<Planet>> queue = new LinkedList<>();
-        final Set<Planet> visited = new HashSet<>();
+        final Queue<List<CelestialBody>> queue = new LinkedList<>();
+        final Set<CelestialBody> visited = new HashSet<>();
 
-        List<Planet> pathToTarget = new ArrayList<>();
+        List<CelestialBody> pathToTarget = new ArrayList<>();
         pathToTarget.add(from);
         queue.add(pathToTarget);
 
@@ -83,10 +82,10 @@ public class RouteCalculator {
             if(from == to) {
                 return consolidateLanes(pathToTarget);
             }
-            for(Planet nextPlanet : getNeighbors(from)){
+            for(CelestialBody nextPlanet : getNeighbors(from)){
                 if(!visited.contains(nextPlanet)) {
                     visited.add(nextPlanet);
-                    List<Planet> pathToNextNode = new ArrayList<>(pathToTarget);
+                    List<CelestialBody> pathToNextNode = new ArrayList<>(pathToTarget);
                     pathToNextNode.add(nextPlanet);
                     queue.add(pathToNextNode);
                 }
@@ -95,15 +94,15 @@ public class RouteCalculator {
         return null;
     }
 
-    private static List<Planet> getNeighbors(Planet planet) {
-        List<Planet> neighbours = new ArrayList<>();
+    private static List<CelestialBody> getNeighbors(CelestialBody planet) {
+        List<CelestialBody> neighbours = new ArrayList<>();
         for(Hyperlane lane : planet.getHyperlanes()){
             neighbours.add(lane.getOppositePlanet(planet));
         }
         return neighbours;
     }
 
-    private static List<Hyperlane> consolidateLanes(List<Planet> planetPath) {
+    private static List<Hyperlane> consolidateLanes(List<CelestialBody> planetPath) {
         List<Hyperlane> lanes = new ArrayList<>();
 
         for (int i = 0; i < planetPath.size()-1; ++i) {

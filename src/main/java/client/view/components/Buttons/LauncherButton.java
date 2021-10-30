@@ -1,7 +1,8 @@
-package client.view.components;
+package client.view.components.Buttons;
 
 import client.Mediator;
 import client.commands.CommandNames;
+import client.view.components.Component;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;

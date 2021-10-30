@@ -23,8 +23,7 @@ public class XmlParser implements Parser {
 
     @Override
     public List<Map<String, ?>> parseData(File file) {
-        // Instantiate the Factory
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         final List<Map<String, ?>> items = new ArrayList<>();
 
         try {

@@ -1,12 +1,10 @@
 package core.collisionvisitors;
 
 import client.SimulationController;
-import core.Asteroid;
 import core.CelestialBody;
 import core.CelestialBodyBuilder;
 import core.CollisionTypes;
 
-import java.util.List;
 import java.util.Random;
 
 public class ExplodeVisitor implements CollisionVisitor {
@@ -22,7 +20,7 @@ public class ExplodeVisitor implements CollisionVisitor {
     public void visitCelestialBody(CelestialBody celestialBody) {
         for(int i = 0; i < 5; ++i){
             builder.makeNewGenericAsteroid();
-            Asteroid asteroid = (Asteroid) builder.returnCelestialBody();
+            CelestialBody asteroid = builder.returnCelestialBody();
             asteroid.setPosition(celestialBody.getPositionX(), celestialBody.getPositionY());
 
             float size = celestialBody.getRadius() / (2.5f + random.nextFloat()) + random.nextFloat();

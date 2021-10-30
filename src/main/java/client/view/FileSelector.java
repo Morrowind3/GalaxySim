@@ -3,6 +3,7 @@ package client.view;
 import client.FileSelectorController;
 import client.Mediator;
 import client.view.components.*;
+import client.view.components.Buttons.LauncherButton;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;

@@ -1,6 +1,5 @@
 package client.commands;
 
-import client.Mediator;
 import client.SimulationController;
 import javafx.event.Event;
 

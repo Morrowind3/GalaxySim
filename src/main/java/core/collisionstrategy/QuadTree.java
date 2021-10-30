@@ -7,14 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuadTree implements Cloneable {
-    private final int level;
-
-    //config
     private static final int MAX_ENTITIES = 4;
     private static final int MAX_DEPTH = 10;
 
     private final QuadRectangle boundary;
     private ArrayList<Hitbox> entities = new ArrayList<>();
+    private final int level;
 
     private QuadTree northWest;
     private QuadTree northEast;
@@ -35,10 +33,6 @@ public class QuadTree implements Cloneable {
         for(Hitbox entity: entities){
             insert(entity);
         }
-    }
-
-    public QuadRectangle getBoundary(){
-        return boundary;
     }
 
     public List<QuadRectangle> getAllQuads(){
@@ -62,12 +56,10 @@ public class QuadTree implements Cloneable {
     }
 
     public boolean insert(Hitbox entity){
-        // Ignore objects that do not belong in this quad tree
         if (!boundary.contains(entity)) {
             return false;
         }
 
-        // If there is space in this quad tree and if doesn't have subdivisions, add the object here
         if(northWest == null){
             if (entities.size() < MAX_ENTITIES)
             {
@@ -81,8 +73,6 @@ public class QuadTree implements Cloneable {
         if(northEast.insert(entity)) return true;
         if(southEast.insert(entity)) return true;
         if(southWest.insert(entity)) return true;
-
-
         return false;
     }
 
@@ -109,7 +99,6 @@ public class QuadTree implements Cloneable {
             intersected.addAll(southEast.getIntersectedQuads(entity));
         }
 
-        //only add if there are no further children to ensure smallest possible range
         if(northWest == null && boundary.contains(entity)){
             intersected.add(boundary);
         }
@@ -117,31 +106,24 @@ public class QuadTree implements Cloneable {
     }
 
     public List<Hitbox> getQuadEntities(QuadRectangle range){
-        // Prepare an array of results
         List<Hitbox> inRange = new ArrayList<>();
-
-        // Automatically abort if the range does not intersect this quad
         if (!range.contains(boundary)){
-            return inRange; // empty list
+            return inRange;
         }
 
-        // Check objects at this quad level
         for(Hitbox entity : entities){
                 if (range.contains(entity)){
                     inRange.add(entity);
                 }
         }
-        // Terminate here, if there are no children
         if (northWest == null){
             return inRange;
         }
 
-        // Otherwise, add the points from the children
         inRange.addAll(northWest.getQuadEntities(range));
         inRange.addAll(northEast.getQuadEntities(range));
         inRange.addAll(southWest.getQuadEntities(range));
         inRange.addAll(southEast.getQuadEntities(range));
-
         return inRange;
     }
 

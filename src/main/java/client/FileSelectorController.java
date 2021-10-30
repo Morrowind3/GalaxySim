@@ -1,10 +1,9 @@
 package client;
 
-import client.SuperController;
-import client.Mediator;
 import client.commands.LoadSimulationCommand;
 import client.commands.SelectFileCommand;
 import client.view.components.*;
+import client.view.components.Buttons.LauncherButton;
 import javafx.stage.Stage;
 
 public class FileSelectorController implements Mediator {

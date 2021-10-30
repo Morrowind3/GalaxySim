@@ -7,20 +7,10 @@ public class AnimationTimerPlus extends AnimationTimer {
     private volatile long simulationSpeed = 80_000_00L;
 
     private volatile boolean isRunning;
-    private volatile boolean taskReady = true;
-
-    public AnimationTimerPlus(){
-        super();
-    }
 
     @Override
     public void handle(long now) {
         //should be overridden anonymously
-    }
-
-    public AnimationTimerPlus(boolean taskNeedsSetup){
-        super();
-        if(taskNeedsSetup) taskReady = false;
     }
 
     public void setSimulationSpeed(long speed){
@@ -33,21 +23,14 @@ public class AnimationTimerPlus extends AnimationTimer {
         return simulationSpeed;
     }
 
-    public void ready(){
-        this.taskReady = true;
-    }
-    public boolean isReady(){ return taskReady; }
-
     @Override
     public void start(){
-        if(!taskReady) return;
         super.start();
         isRunning = true;
     }
 
     @Override
     public void stop(){
-        if(!taskReady) return;
         super.stop();
         isRunning = false;
     }

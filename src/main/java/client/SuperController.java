@@ -38,12 +38,9 @@ public class SuperController implements Mediator {
 
     public SuperController(){
         mementoTimer = () -> saveState = true;
-
         executor = Executors.newSingleThreadScheduledExecutor();
         startMementoTimer(false);
-
-
-        applicationLoop = new AnimationTimerPlus(true) {
+        applicationLoop = new AnimationTimerPlus() {
             private int saveStateCounter = 0;
             @Override
             public void handle(long now) {
@@ -78,7 +75,7 @@ public class SuperController implements Mediator {
         setCommands();
         simulationController.loadData(dataUrl);
         simulationController.updateSimulation();
-        applicationLoop.ready();
+        applicationLoop.start();
     }
 
     public void setMainContentCanvas(Canvas mainContent){
@@ -101,8 +98,7 @@ public class SuperController implements Mediator {
         setCommands();
         keyConfigBar.formCommandButtons(inputHandler.getKeyCommands());
 
-
-        KeyConfigBarController keyConfigBarController = new KeyConfigBarController(inputHandler, this);
+        KeyConfigBarController keyConfigBarController = new KeyConfigBarController(inputHandler);
         keyConfigBarController.registerComponent(keyConfigBar);
     }
 

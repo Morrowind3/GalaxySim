@@ -6,10 +6,10 @@ import java.util.Observable;
 
 
 public class Hyperlane extends Observable implements Destructable, Cloneable {
-    private Planet planetA;
-    private Planet planetB;
+    private CelestialBody planetA;
+    private CelestialBody planetB;
 
-    public Hyperlane(Planet planetA, Planet planetB){
+    public Hyperlane(CelestialBody planetA, CelestialBody planetB){
         this.planetA = planetA;
         this.planetB = planetB;
         planetA.addHyperlane(this);
@@ -21,8 +21,8 @@ public class Hyperlane extends Observable implements Destructable, Cloneable {
         //AB^2 + BC^2 = AC^2
         boolean planetAIsHighest = planetA.getPositionY() > planetB.getPositionY();
 
-        Planet highest = planetAIsHighest ? planetA : planetB;
-        Planet lowest = !planetAIsHighest ? planetA : planetB;
+        CelestialBody highest = planetAIsHighest ? planetA : planetB;
+        CelestialBody lowest = !planetAIsHighest ? planetA : planetB;
 
         float highX = highest.getCenterX();
         float highY = highest.getCenterY();
@@ -47,16 +47,16 @@ public class Hyperlane extends Observable implements Destructable, Cloneable {
         for(CelestialBody planet : galaxyList){
             if(planet.name == null) continue;
             if(planet.name.equals(planetA.name)){
-                planetA = (Planet) planet;
+                planetA = planet;
             } else
             if(planet.name.equals(planetB.name)){
-                planetB = (Planet) planet;
+                planetB = planet;
             }
         }
         setChanged();
     }
 
-    public Planet getOppositePlanet(Planet thisPlanet){
+    public CelestialBody getOppositePlanet(CelestialBody thisPlanet){
         if(planetA == thisPlanet) return planetB;
         if(planetB == thisPlanet) return planetA;
         return null;
@@ -67,11 +67,11 @@ public class Hyperlane extends Observable implements Destructable, Cloneable {
         return new Hyperlane(planetA, planetB);
     }
 
-    public Planet getPlanetA(){
+    public CelestialBody getPlanetA(){
         return planetA;
     }
 
-    public Planet getPlanetB() {
+    public CelestialBody getPlanetB() {
         return planetB;
     }
 

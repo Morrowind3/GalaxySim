@@ -12,24 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 public class GalaxySimulation implements MementoOriginator {
-
-    private List<CelestialBody> celestialBodies = new ArrayList<>();
     private final CelestialBodyBuilder builder = new CelestialBodyBuilder();
+    private List<CelestialBody> celestialBodies = new ArrayList<>();
     private CollisionStrategy collisionStrategy;
 
     public GalaxySimulation(){
-        collisionStrategy = new NullCollisionStrategy(0,0,null);
-    }
-
-
-    public void setCollisionStrategy(CollisionStrategy strategy){
-        this.collisionStrategy = strategy;
-    }
-    public CollisionStrategy getCollisionStrategy(){
-        return collisionStrategy;
-    }
-    public List<CelestialBody> getCelestialBodies(){
-        return celestialBodies;
+        collisionStrategy = new NullCollisionStrategy();
     }
 
     public void updateSimulation(){
@@ -47,12 +35,12 @@ public class GalaxySimulation implements MementoOriginator {
             for(Map<String, ?> celestialBody : loader.loadSimData(dataUrl)){
                 builder.makeNewCelestialBodyFromMap(celestialBody);
                 String[] neighbours = ((String) celestialBody.get("neighbours")).split(",");
-                builder.formHyperlanes(neighbours, celestialBodies);
+                if(!neighbours[0].equals("")){
+                    builder.formHyperlanes(neighbours, celestialBodies);
+                }
                 celestialBodies.add(builder.returnCelestialBody());
             }
-        } catch (InvalidDataException e){
-            System.out.println(e.getMessage());
-            return;
+        } catch (InvalidDataException ignored){
         }
     }
 
@@ -67,12 +55,18 @@ public class GalaxySimulation implements MementoOriginator {
             galaxyListDeepCopy.add(celestialBody.clone());
         }
 
-        CollisionStrategy strategyCopy = collisionStrategy.clone();
-
-        keeper.push(new GalaxyMemento(strategyCopy, galaxyListDeepCopy, this));
-
+        keeper.push(new GalaxyMemento(collisionStrategy.clone(), galaxyListDeepCopy, this));
     }
 
+    public void setCollisionStrategy(CollisionStrategy strategy){
+        this.collisionStrategy = strategy;
+    }
+    public CollisionStrategy getCollisionStrategy(){
+        return collisionStrategy;
+    }
+    public List<CelestialBody> getCelestialBodies(){
+        return celestialBodies;
+    }
 
     private class GalaxyMemento implements Memento {
         private final List<CelestialBody> planetStates;
@@ -87,15 +81,14 @@ public class GalaxySimulation implements MementoOriginator {
 
         public void restore() {
             for(CelestialBody clone: planetStates){
-                if(clone instanceof Planet){
-                    for(Hyperlane cloneLane : ((Planet) clone).getHyperlanes()){
+                    for(Hyperlane cloneLane : clone.getHyperlanes()){
                         cloneLane.resyncPlanets(planetStates);
-                    }
                 }
             }
             simulation.setGalaxyList(planetStates);
             simulation.setCollisionStrategy(collisionStrategy);
         }
     }
+
 
 }

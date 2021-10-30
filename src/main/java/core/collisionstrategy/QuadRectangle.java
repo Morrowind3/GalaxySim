@@ -1,17 +1,13 @@
 package core.collisionstrategy;
 
-import java.util.UUID;
-
 public class QuadRectangle implements Hitbox {
-    private float x, y, width, height;
-    private String id;
+    private final float x, y, width, height;
 
     public QuadRectangle(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.id = UUID.randomUUID().toString();
     }
 
     boolean contains(Hitbox entity){
@@ -21,11 +17,6 @@ public class QuadRectangle implements Hitbox {
         boolean crossedRight = entity.getPositionX() <= x+width;
 
         return crossedBottom && crossedLeft && crossedRight && crossedTop;
-    }
-
-    @Override
-    public String toString() {
-        return "x: " + x + " y: " + y + " w: " + width + " h: " + height;
     }
 
     @Override
@@ -44,22 +35,8 @@ public class QuadRectangle implements Hitbox {
     }
 
     @Override
-    public void setHeight(Float h) {
-        height = h;
-    }
-
-    @Override
     public Float getWidth() {
         return width;
     }
 
-    @Override
-    public void setWidth(Float w) {
-        width = w;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
 }

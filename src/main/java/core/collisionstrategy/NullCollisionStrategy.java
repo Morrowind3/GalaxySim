@@ -6,7 +6,7 @@ import java.util.List;
 
 public class NullCollisionStrategy extends CollisionStrategy {
 
-    public NullCollisionStrategy(int width, int height, List<CelestialBody> galaxyList) {
+    public NullCollisionStrategy() {
         super(0, 0, null);
     }
 

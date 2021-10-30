@@ -2,20 +2,17 @@ package client.commands;
 
 import client.SimulationController;
 import core.CelestialBody;
+import core.CelestialBodyTypes;
 import core.Hyperlane;
-import core.Planet;
-import core.RouteCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 public abstract class RouteCommand implements Command{
     protected boolean active = false;
     protected final SimulationController simulationController;
-    protected Planet pointA;
-    protected Planet pointB;
+    protected CelestialBody pointA;
+    protected CelestialBody pointB;
     protected List<Hyperlane> route = new ArrayList<>();
 
 
@@ -24,21 +21,22 @@ public abstract class RouteCommand implements Command{
     }
 
     protected void setPointsBiggest(){
-        final List<CelestialBody> celestialBodies = simulationController.getCelestialBodies();
+        pointA = null;
+        pointB = null;
+        List<CelestialBody> celestialBodies = simulationController.getCelestialBodies();
 
         for(CelestialBody celestialBody : celestialBodies){
-            if(!(celestialBody instanceof Planet)) continue; //todo: typecheck
-            Planet planet = (Planet) celestialBody;
-            if(isBigger(planet, pointA)){
-                pointA = planet;
+            if(celestialBody.getType() != CelestialBodyTypes.PLANET) continue;
+            if(isBigger(celestialBody, pointA)){
+                pointA = celestialBody;
             } else
-            if(isBigger(planet, pointB)){
-                pointB = planet;
+            if(isBigger(celestialBody, pointB)){
+                pointB = celestialBody;
             }
         }
     }
 
-    private boolean isBigger(Planet compareFrom, Planet compareTo){
+    private boolean isBigger(CelestialBody compareFrom, CelestialBody compareTo){
             return compareTo == null || compareFrom.getRadius() > compareTo.getRadius();
     }
 

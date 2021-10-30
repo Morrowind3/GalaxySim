@@ -1,17 +1,14 @@
 package client.commands;
 
 import client.SimulationController;
-import core.Asteroid;
 import core.CelestialBody;
 import core.CelestialBodyBuilder;
 import javafx.event.Event;
 
-import java.util.List;
 import java.util.Random;
 
 public class AddAsteroidCommand implements Command {
     private final SimulationController mediator;
-
     private final int maxX;
     private final int maxY;
 
@@ -29,7 +26,7 @@ public class AddAsteroidCommand implements Command {
     public void handle(Event event) {
         CelestialBodyBuilder builder = new CelestialBodyBuilder();
         builder.makeNewGenericAsteroid();
-        Asteroid asteroid = (Asteroid) builder.returnCelestialBody();
+        CelestialBody asteroid = builder.returnCelestialBody();
 
         final Random random = new Random();
         float randomX = random.nextInt(maxX);

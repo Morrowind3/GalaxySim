@@ -5,12 +5,7 @@ import core.Hyperlane;
 import core.RouteCalculator;
 import javafx.event.Event;
 
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 public class QuickestRouteCommand extends RouteCommand implements Command {
-
     public QuickestRouteCommand(SimulationController simulationController) {
         super(simulationController);
     }

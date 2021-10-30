@@ -38,7 +38,7 @@ public class QuadTreeCollisionStrategy extends CollisionStrategy {
             for (QuadRectangle quad : entityQuads) {
                 List<Hitbox> nearbyEntities = quadTree.getQuadEntities(quad);
                 for (Hitbox nearby : nearbyEntities) {
-                    if (nearby.getId().equals(thisEntity.getId())) continue;
+                    if (nearby == thisEntity) continue;
                     boolean collision = areColliding((CelestialBody) nearby, (CelestialBody) thisEntity);
 
                     boolean firstIsIntersecting = intersections.get(thisEntity) == nearby;

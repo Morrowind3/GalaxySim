@@ -3,23 +3,18 @@ package client;
 import client.commands.*;
 import client.view.KeyConfigBar;
 import client.view.components.Component;
-import client.view.components.LauncherButton;
-import core.MementoKeeper;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import client.view.components.Buttons.LauncherButton;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 public class KeyConfigBarController implements Mediator {
-    private KeyConfigBar keyConfigBar;
     private final InputHandler inputHandler;
 
     private TextInputDialog inputDialogue;
 
-    public KeyConfigBarController(InputHandler handler, SuperController superController){
+    public KeyConfigBarController(InputHandler handler){
         inputHandler = handler;
     }
 
@@ -45,13 +40,6 @@ public class KeyConfigBarController implements Mediator {
     @Override
     public void registerComponent(Component component) {
         component.setMediator(this);
-        switch (component.getName()) {
-            case "KeyConfigBar":
-                keyConfigBar = (KeyConfigBar) component;
-                break;
-            default:
-                break;
-        }
     }
 
 }

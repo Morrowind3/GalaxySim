@@ -5,9 +5,8 @@ import client.Mediator;
 import client.commands.Command;
 import client.commands.CommandNames;
 import client.view.components.Component;
-import client.view.components.LauncherButton;
+import client.view.components.Buttons.LauncherButton;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -17,15 +16,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class KeyConfigBar extends HBox implements Component {
     private KeyConfigBarController controller;
-
-    private final Background background;
+    private static final Background BACKGROUND = new Background(new BackgroundFill(Color.CORNFLOWERBLUE, null, null));
 
     public KeyConfigBar(){
         setPadding(new Insets(5, 5, 5, 5));
         setSpacing(5);
-        BackgroundFill backgroundFill = new BackgroundFill(Color.CORNFLOWERBLUE, null, null);
-        background = new Background(backgroundFill);
-        setBackground(background);
+        setBackground(BACKGROUND);
     }
 
     public void formCommandButtons(HashMap<KeyCode, Command> commands){
@@ -40,14 +36,12 @@ public class KeyConfigBar extends HBox implements Component {
             }
             buttonColumn[0].getChildren().add(button);
         });
-//        if(pos.get() % 2 == 1){
-            getChildren().add(buttonColumn[0]);
-//        }
+        getChildren().add(buttonColumn[0]);
     }
 
     private VBox newButtonColumn(){
         VBox buttonColumn = new VBox();
-        buttonColumn.setBackground(background);
+        buttonColumn.setBackground(BACKGROUND);
         return buttonColumn;
     }
 

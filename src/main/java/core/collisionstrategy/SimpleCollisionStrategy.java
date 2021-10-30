@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 //TODO: Implement hitbox interface here as well.
 
 public class SimpleCollisionStrategy extends CollisionStrategy implements Cloneable {
-
     public SimpleCollisionStrategy(int width, int height, SimulationController controller) {
         super(width, height, controller);
     }

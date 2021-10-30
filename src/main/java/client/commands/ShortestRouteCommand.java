@@ -1,17 +1,9 @@
 package client.commands;
 
-import client.Mediator;
 import client.SimulationController;
-import core.CelestialBody;
 import core.Hyperlane;
-import core.Planet;
 import core.RouteCalculator;
 import javafx.event.Event;
-
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
 
 public class ShortestRouteCommand extends RouteCommand implements Command{
     public ShortestRouteCommand(SimulationController simulationController){
