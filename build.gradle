@@ -24,4 +24,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // Show test results.
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
